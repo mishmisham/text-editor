@@ -1,0 +1,43 @@
+.notify-component
+    position: fixed
+    bottom: 20px
+    right: 20px
+    
+    &--visible
+        display: flex
+
+    &--hidden
+        display: none
+
+    &_inner
+        width: calc(100% - 40px)
+        flex: 1 0 auto
+        max-width: 240px
+
+        &-content
+            display: flex
+            flex-direction: column
+            padding: 16px
+            border-radius: 8px
+            box-shadow: 0 0 12px rgba(0,0,0,.15)
+
+            &--error
+                background: #f98ecb
+
+            &--info
+                background: #aae7fc
+
+            &-header
+                display: flex
+                margin-bottom: 12px
+
+                &-close
+                    cursor: pointer
+                    margin: auto 0 auto auto
+                    background: none
+                    text-align: center
+
+            &-body
+                display: flex
+                color: #333
+                font-size: 16px

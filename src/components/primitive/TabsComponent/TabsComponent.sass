@@ -1,0 +1,31 @@
+@import '@/stylesheet/variables'
+
+.tabs 
+    @include flexbox(row, flex-start, flex-start)
+    max-width: 100%
+    overflow: auto
+
+    &_inner
+        @include flexbox(row, flex-start, flex-start)
+        width: fit-content
+
+    &_tab
+        @include flexbox(row, center, center)
+        white-space: nowrap
+        padding: 2px 4px
+        background: none
+        color: $textColor
+        cursor: pointer
+        border: 0
+        outlint: 0
+        min-width: 32px
+        span
+            @include flexbox(row, center, center)
+            margin: auto
+            height: 16px
+            font-size: 16px
+            font-weight: bold
+
+        &--current
+            color: $accentTextColor
+            

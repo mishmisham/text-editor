@@ -1,0 +1,27 @@
+@import '@/stylesheet/variables'
+
+.input-number
+    @include flexbox(row, space-between, center)
+    position: relative
+
+    label
+        @include flexbox(row, flex-start, center)
+        padding-right: 8px
+
+    input
+        @include flexbox(row, center, center, 32px)
+        background: $inputBackground
+        border: 0
+        font-size: $defaultTextSize
+        border: 1px solid darken($inputBackground, 2)
+        padding: $contentItemDefaultPadding
+        transition: $defaultTransition
+        color: $textColor
+        text-align: center
+        border-radius: 4px
+       
+        &:focus
+            background: lighten($inputBackground, $lightenDefaultValue)
+            border: 0
+            border: 1px solid lighten($inputBackground, 2)
+            outline: none

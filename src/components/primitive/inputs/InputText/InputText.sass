@@ -1,0 +1,43 @@
+@import '@/stylesheet/variables'
+
+.input-text
+    @include flexbox(column, flex-start)
+    position: relative
+
+    label
+        font-weight: 400
+        font-size: $miniTextSize
+        color: $accentTextColor
+        margin-bottom: $marginBottomMini
+
+    &_input
+        @include flexbox(row, flex-start)
+        position: relative
+        
+        &-reset
+            color: lighten($textColor, 10)
+            background: none
+            cursor: pointer
+            border: 0
+            transform: rotate(180deg)
+            position: absolute
+            right: 4px
+            top: 0
+            bottom: 0
+            margin: auto
+
+        input
+            @include flexbox(row, flex-start)
+            background: $inputBackground
+            border: 0
+            font-size: $defaultTextSize
+            border-bottom: $borderDefaultValue $transparentColor
+            padding: $contentItemDefaultPadding
+            transition: $defaultTransition
+            color: $textColor
+        
+            &:focus
+                background: lighten($inputBackground, $lightenDefaultValue)
+                border: 0
+                border-bottom: $borderDefaultValue $inputBorderColor
+                outline: none

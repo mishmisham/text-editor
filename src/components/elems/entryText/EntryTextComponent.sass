@@ -1,0 +1,45 @@
+@import './theme/componentVariables'
+@import './theme/index'
+
+.entry-text
+    @include flexbox(row, flex-start, flex-start)
+    overflow-y: auto
+    overflow-x: auto
+    position: relative
+    height: 100%
+    max-width: 100%
+    padding-top: $wrapperTopPadding
+
+    &_wrapper
+        @include flexbox(row, flex-start, flex-start)
+        overflow: hidden
+        position: relative
+        max-width: 100%
+        height: $screenDemoHeight
+        max-height: 100vh
+        border-radius: 8px
+        background: $editorBackground
+
+    &_inner
+        @include flexbox(row, flex-start, flex-start)
+        position: relative
+        min-width: 100%
+        width: fit-content
+        padding-bottom: $wrapperTopPadding
+        *
+            cursor: text
+
+            &::selection 
+                background: rgba(255,255,255, 0)
+
+        &-content
+            @include flexbox(row, flex-start, flex-start)
+            width: fit-content
+            position: relative
+            min-width: 100%
+            flex: 1 0 auto
+
+    .fake-br
+        opacity: 0
+        margin-left: 0
+        height: calc($inputTextHeight - 8px)

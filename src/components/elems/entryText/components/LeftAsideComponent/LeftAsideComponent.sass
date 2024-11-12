@@ -1,0 +1,41 @@
+@import '../../theme/componentVariables'
+
+$scrollThreshold: 0 //320px
+
+@mixin marginLeftthreshold()
+    width: $leftAsideWidth + $scrollThreshold
+    margin-left: -$scrollThreshold
+    padding-left: $scrollThreshold
+
+.left-aside
+    @include flexbox(column, flex-start, flex-start)
+    @include marginLeftthreshold()
+    min-width: $leftAsideWidth
+    padding-top: $wrapperTopPadding
+    padding-bottom: $wrapperTopPadding
+    position: absolute
+    top: 0
+    z-index: 1
+    transition: 0
+    box-shadow: 0 0 2px rgba(0, 0, 0, .1)
+
+    &_row
+        @include flexbox(column, center, center)
+        @include marginLeftthreshold()
+        font-size: calc($defaultTextSize - 25%)
+        background: $editorBackground
+
+        &-number
+            @include flexbox(column, center, center)
+            color: darken($defaultEditorTextColor, 35)
+            margin: auto
+            width: auto
+
+        &--current
+            background: lighten($editorBackground, 10)
+            border-radius: 0 1px 1px 0
+            
+
+            .left-aside_row-number
+                color: $defaultEditorTextColor
+

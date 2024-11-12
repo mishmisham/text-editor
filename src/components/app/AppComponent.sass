@@ -1,0 +1,10 @@
+@import '@/stylesheet/defaults'
+
+.app
+    @include flexbox(column)
+
+.content
+    @include flexbox(column, flex-start, flex-start, calc(100% - 24px))
+    max-width: 800px
+    margin-top: 32px
+    border-radius: 8px

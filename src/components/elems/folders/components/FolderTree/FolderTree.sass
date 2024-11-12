@@ -1,0 +1,10 @@
+@import '@/stylesheet/variables'
+
+.folder-tree
+     @include flexbox(column, flex-start, flex-start)
+     position: relative
+     padding-bottom: 8px
+     max-height: $screenDemoHeight
+
+     &_header
+        @include flexbox(row, flex-start, flex-start)

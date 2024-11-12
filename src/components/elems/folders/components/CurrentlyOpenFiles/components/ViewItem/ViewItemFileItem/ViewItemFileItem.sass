@@ -1,0 +1,85 @@
+@import '@/stylesheet/variables'
+
+.currently-open-files_file
+    @include flexbox(column, flex-start, flex-start)
+    
+    border-bottom: 1px solid rgba(0,0,0,.15)
+
+    &--current
+        .currently-open-files_file-title
+            background: rgba(255,255,255,.1)
+
+        .currently-open-files_file-title-name
+            color: rgb(201, 201, 201)
+
+    button
+        @include flexbox(row, center)
+        background: none
+        cursor: pointer
+        color: darken($textColor, 5)
+        border: none
+        border-radius: 3px
+        outline: none
+        font-size: $defaultTextSize
+        padding: 2px 0
+
+    &-title
+        @include flexbox(row, flex-start, flex-start)
+        background: none
+        cursor: pointer
+        margin: auto auto auto 0
+        background: rgba(255,255,255,.01)
+        padding: 2px 4px
+
+        &-name
+            @include flexbox(row, flex-start, flex-start)
+            background: none
+            cursor: pointer
+            font-weight: 400
+            color: darken($textColor, 5)
+            font-size: $defaultTextSize
+            margin: auto auto auto 0
+        
+        &-collapse
+            width: 16px
+            max-width: 16px
+            min-width: 16px
+            max-height: 16px
+            height: 16px
+            font-weight: 600
+            margin: auto 8px auto 0
+            background: rgba(255,255,255,.1)
+
+        &-action
+            width: 24px
+            max-width: 24px
+            min-width: 24px
+            max-height: 16px
+            height: 16px
+            font-weight: 600
+            margin: auto 0 auto auto
+            background: rgba(255,255,255,.1)
+
+    &-details
+        @include flexbox(column, flex-start, flex-start)
+        padding: 8px
+        border-radius: 0 0 8px 8px
+        font-size: $defaultTextSize
+        color: darken($textColor, 20)
+        background: rgba(0,0,0,.15)
+        margin-bottom: 4px
+
+    &-path
+        @include flexbox(row, flex-start, flex-start)
+        overflow: auto
+
+        &-inner
+            @include flexbox(row, flex-start, flex-start)
+            white-space: nowrap
+            width: fit-content
+            min-width: 100%
+            padding: 0 0 12px
+
+        &-item
+            font-weight: 600
+            font-size: $microTextSize

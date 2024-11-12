@@ -1,0 +1,43 @@
+/* effects */ 
+$lightenDefaultValue: 5
+$borderDefaultValue: 1px solid
+$defaultTransition: .15s ease-in-out
+
+/* sizes */
+$marginBottomMini: 12px
+$marginBottomItem: 24px
+$marginBottomSection: 48px
+
+$contentItemDefaultPadding: 2px 4px
+
+$screenDemoHeight: 720px
+/* typography */
+
+$microTextSize: 8px
+$miniTextSize: 11px
+$defaultTextSize: 12px
+$biggerTextSize: 16px
+$subtitleTextSize: 24px
+$titleTextSize: 32px
+    
+/* colors */    
+$transparentColor: rgba(255,255,255,0)
+
+$textColor: #8f8f8f
+$accentTextColor: #f0f0f0
+
+$mainBackground: rgb(23, 23, 23)
+$contentBackground: lighten($mainBackground, $lightenDefaultValue)
+$scrollbarBackground: lighten($mainBackground, 10+$lightenDefaultValue)
+
+$inputBackground: lighten($mainBackground, 10+$lightenDefaultValue)
+$inputBorderColor: rgba(183, 2, 122, 0)
+
+/* mixin */
+@mixin flexbox($direction:row, $justify:center, $align: center, $width: 100%)
+    display: flex
+    flex-direction: $direction
+    justify-content: $justify
+    align-content: $align
+    align-items: $align
+    width: $width

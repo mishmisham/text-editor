@@ -1,0 +1,52 @@
+@import '@/stylesheet/variables'
+
+.search-in-files_results
+    @include flexbox(column, flex-start, flex-start)
+    margin-bottom: 4px
+    color: $textColor
+
+    &-name
+        @include flexbox(row, flex-start, flex-start)
+        font-size: $defaultTextSize
+        font-weight: bold
+        background: rgba(255,255,255,.1)
+        padding: 4px
+
+    &-path
+        @include flexbox(row, flex-start, flex-start)
+        white-space: nowrap
+        background: rgba(255,255,255,.05)
+        padding: 2px 4px
+        color: darken($textColor, 10)
+
+        span
+            font-size: $miniTextSize
+    
+    &-found
+        @include flexbox(column, flex-start, flex-start)
+
+        &-item
+            @include flexbox(row, flex-start, flex-start)
+            font-size: $miniTextSize
+            cursor: pointer
+            white-space: nowrap
+            padding: 2px 4px
+            border-bottom: 1px solid rgba(255,255,255,.1)
+
+            &:hover
+                background: rgba(255,255,255,.03)
+
+            &-highlight
+                margin: auto 2px
+                color: lighten($textColor, 10)
+
+                &--new
+                    background: rgba(11, 255, 84, 0.15)
+                    font-weight: bold
+
+                &--old
+                    background: rgba(255, 11, 149, 0.15)
+                    text-decoration: line-through
+
+            &-context
+                color: darken($textColor, 20)

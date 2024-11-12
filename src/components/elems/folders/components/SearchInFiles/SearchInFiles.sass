@@ -1,0 +1,21 @@
+@import '@/stylesheet/variables'
+
+.search-in-files
+     @include flexbox(column, flex-start, flex-start)
+     position: relative
+     padding-bottom: 8px
+
+     &_header
+         @include flexbox(column, flex-start, flex-start)
+
+     &_content
+        @include flexbox(column, flex-start, flex-start)
+        background: rgba(255,255,255,.02)
+        overflow: auto
+
+        &_inner
+            @include flexbox(column, flex-start, flex-start)
+            padding: 8px 0 16px
+            width: fit-content
+            min-width: 100%
+            min-height: 240px

@@ -1,0 +1,35 @@
+@import './variables'
+
+*
+  margin: 0
+  padding: 0
+  box-sizing: border-box
+  font-family:  -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+
+ul
+  list-style: none
+
+a
+  text-decoration: none
+
+body
+  background: $mainBackground
+
+
+*
+  scrollbar-width: thin!important
+  scrollbar-color: $scrollbarBackground $mainBackground!important
+
+*::-webkit-scrollbar
+  width: 12px!important
+
+*::-webkit-scrollbar-track
+  background: $mainBackground!important
+
+*::-webkit-scrollbar-thumb
+  background-color: $scrollbarBackground!important
+  border-radius: 20px!important
+  border: 3px solid $mainBackground!important
+

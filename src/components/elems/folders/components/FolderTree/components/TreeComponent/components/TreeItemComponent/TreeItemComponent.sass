@@ -1,0 +1,85 @@
+@import '@/stylesheet/variables'
+
+.folder-tree-item
+    @include flexbox(column, flex-start, flex-start)
+    position: relative
+    // border-left: 1px dotted rgba(255,255,255,.15)
+    
+    &--current
+        >.folder-tree-item_item
+            background: rgba(255,255,255,.05)
+            border-radius: 4px
+
+            button
+                color: lighten($textColor, 15)
+
+    &--drop-target
+        background: rgba(255,255,255,.05)
+        outline: 1px dashed rgba(255,255,255,.25)
+
+    &_item
+        @include flexbox(row, flex-start, flex-start)
+        padding: 1px 0
+        position: relative
+
+        &:hover
+            .folder-tree-item_item-actions
+                opacity: 1
+
+        &-inner
+            @include flexbox(row, flex-start, flex-start)
+            position: relative
+
+            .input-text input
+                padding: 2.5px 0 2.5px 4px
+                background: rgba(255,255,255,.05)!important
+                border: 0
+                color: lighten($textColor, 15)
+                text-shadow: 0 0 2px rgba(255,255,255,.2)
+        button
+            @include flexbox(row, flex-start)
+            background: none
+            cursor: pointer
+            color: darken($textColor, 5)
+            border: none
+            border-radius: 3px
+            outline: none
+            font-size: $defaultTextSize
+            padding: 2px 0
+
+            &:hover
+                color: lighten($textColor, 20)
+        
+        &-actions
+            @include flexbox(row, flex-start, flex-start)
+            position: absolute
+            top: 0px
+            left: -30px
+            width: 30px
+            opacity: .45
+            transition: .15s ease-in-out
+            button
+                width: 14px
+                max-width: 14px
+                margin: 0
+                font-size: 12px
+
+                &:hover
+                    color: lighten($textColor, 40)
+
+        &-main
+            @include flexbox(row, flex-start, flex-start)
+
+    &_name
+        @include flexbox(row, flex-start)
+        font-size: $defaultTextSize
+        white-space: nowrap
+        padding-left: 4px
+
+    &_type-icon
+        width: 12px
+        margin: auto 2px auto 0
+        font-size: $defaultTextSize
+
+    &_children
+            @include flexbox(column, flex-start, flex-start)

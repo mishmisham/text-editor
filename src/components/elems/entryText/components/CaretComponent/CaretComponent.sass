@@ -1,0 +1,65 @@
+@import '../../theme/componentVariables'
+
+$selectedRowBackground: lighten($editorBackground, $lightenDefaultValue)
+
+@keyframes caretBlinking
+    0%
+        opacity: .9
+    10%
+        opacity: .8
+    20%
+        opacity: .7
+    30%
+        opacity: .4
+    40%
+        opacity: .3
+    50%
+        opacity: .1x
+    60%
+        opacity: .3
+    70%
+        opacity: .4
+    80%
+        opacity: .7
+    90%
+        opacity: .8
+    100%
+        opacity: .9
+       
+
+.caret-component
+    position: absolute
+    width: 1px
+    background: rgba(255, 255, 255, 0.15)
+    border-radius: 3px
+    margin-top: -2px
+    margin-left: -0.25px
+    border-top: 1px solid rgba(255, 255, 255, 0.75)
+    border-bottom: 1px solid rgba(255, 255, 255, 0.75)
+    outline: 0.25px solid rgba(255, 255, 255, 0.05)
+    box-shadow: 0 0 2px rgba(255, 255, 255, 0.55)
+    animation: caretBlinking .9s ease-in-out infinite
+    min-height: 17px
+    max-height: 17px
+
+.caret-selection
+    position: absolute
+    background: rgba(255, 255, 255, 0.05)
+    margin-top: 3px
+    padding: 1.5px 1px
+    margin-left: -1px
+    border-top: 0.5px solid rgba(255, 255, 255, 0.05)
+    border-bottom: 0.5px solid rgba(255, 255, 255, 0.05)
+    outline: 1px solid rgba(255, 255, 255, 0.05)
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.15)
+    border-radius: 3px
+   
+.selected-row
+    background: $selectedRowBackground
+    border: 0
+    border-radius: 1px
+    width: 100%
+    position: absolute
+    left: 0
+    outline-offset: 1.5px
+    outline: $selectedRowBackground

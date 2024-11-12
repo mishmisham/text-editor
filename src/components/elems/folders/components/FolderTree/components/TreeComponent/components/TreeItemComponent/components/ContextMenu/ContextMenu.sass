@@ -1,0 +1,38 @@
+@import '@/stylesheet/variables'
+
+.folder-tree_context-menu
+    @include flexbox(row, flex-start, flex-start)
+    width: auto
+    padding: 4px
+
+    &-item
+        @include flexbox(column, center, center)
+        position: relative
+        white-space: nowrap
+        // height: 22px
+        margin-right: 4px
+        color: $textColor
+        border: 0
+        background: 0
+        cursor: pointer
+        font-size: $defaultTextSize
+        border: 1px solid rgba(92, 85, 85, 0.5)
+        border-radius: 4px
+
+        &:last-of-type
+            margin-right: 0
+
+        &:hover
+            color: lighten($textColor, 30)
+            background: rgba(255,255,255,.1)
+            border: 1px solid rgba(92, 85, 85, 0.75)
+                
+        span
+            @include flexbox(row, center, center)
+            min-width: 36px
+            font-weight: 600
+            font-size: $microTextSize
+            white-space: nowrap
+            padding: 3px 4px
+            text-shadow: 0 0 2px rgba(0,0,0,.85)
+            

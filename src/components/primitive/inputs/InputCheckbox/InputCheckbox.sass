@@ -1,0 +1,35 @@
+@import '@/stylesheet/variables'
+
+.input-checkbox
+    @include flexbox(row, flex-start, flex-start)
+    position: relative
+
+    &--checked
+        .input-checkbox_input
+            background: lighten($inputBackground, 4)
+            &::after
+                @include flexbox(row, center, center)
+                content: '✔'
+                top: 0
+                left: 0
+                right: 0
+                bottom: 0
+                margin: auto
+                width: 14px
+                height: 14px
+                font-size: 80%
+
+    &_input
+        @include flexbox(row, center, center)
+        width: 18px
+        min-width: 18px
+        height: 18px
+        background: lighten($inputBackground, 2)
+        border-radius: 4px
+        margin-right: 8px
+        border: 1px solid darken($inputBackground, 2)
+        cursor: pointer
+        position: relative
+
+        input
+            display: none

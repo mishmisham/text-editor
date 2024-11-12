@@ -1,0 +1,37 @@
+@import '@/stylesheet/variables'
+
+.folder-tree_main-menu
+     @include flexbox(row, flex-end, flex-start)
+     position: relative
+     padding-bottom: 8px
+
+     &-inner
+        @include flexbox(row, flex-end, flex-start)
+
+        .input-text
+            margin-right: 8px
+
+            &_input-reset
+                margin: auto 0!important
+                right: 2px!important
+
+        button
+            @include flexbox(row, center, center)
+            background: none
+            cursor: pointer
+            color: darken($textColor, 10)
+            width: 20px
+            height: 20px
+            margin-right: 8px
+            border: 0
+            border-radius: 3px
+            outline: none
+            font-size: $biggerTextSize
+            padding-top: 1px
+            padding-bottom: 2px
+
+            &:hover
+                color: $textColor
+
+            &:disabled
+                color: darken($textColor, 30)

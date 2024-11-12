@@ -1,0 +1,62 @@
+@import '@/stylesheet/variables'
+
+.currently-open-files_view
+    @include flexbox(column, flex-start, flex-start)
+    padding: 4px 4px
+    border-radius: 4px
+
+    &--current
+        background: rgba(255,255,255,.03)
+
+        .currently-open-files_view-title
+            color: rgb(193, 213, 220)!important
+
+    button
+        @include flexbox(row, center)
+        background: none
+        cursor: pointer
+        color: darken($textColor, 5)
+        border: none
+        border-radius: 3px
+        outline: none
+        font-size: $defaultTextSize
+
+    &-header
+        @include flexbox(row, flex-start, flex-start)
+        padding: 2px 0 4px
+        
+    .currently-open-files_view-collapse
+        @include flexbox(row, center, center)
+        text-align: center
+        width: 16px
+        max-width: 16px
+        min-width: 16px
+        max-height: 16px
+        height: 16px
+        font-weight: 600
+        margin: auto 8px auto 0
+        background: rgba(255,255,255,.1)
+
+    .currently-open-files_view-title
+        @include flexbox(row, flex-start, flex-start)
+        background: none
+        cursor: pointer
+        font-weight: 600
+        color: darken($textColor, 5)
+        font-size: $defaultTextSize
+        margin: auto auto auto 0
+
+    .currently-open-files_view-action
+        @include flexbox(row, center, center)
+        text-align: center
+        width: 24px
+        max-width: 24px
+        min-width: 24px
+        max-height: 16px
+        height: 16px
+        font-weight: 600
+        margin: auto 0 auto 4px
+        background: rgba(255,255,255,.1)
+
+    &-files
+        @include flexbox(column, flex-start, flex-start)
