@@ -15,12 +15,10 @@ const ItemDefaultMainContent = ({
     } = useContext(ViewContext);
 
     const {
-        renameID,
         openFolder,
         closeFolder,
         setContextMenuItem,
         setCurrentSelected,
-        mouseContextMenuItem
     } = useContext(FolderTreeContext);
     
     const toggleItem = () => {
@@ -45,7 +43,6 @@ const ItemDefaultMainContent = ({
                 <button
                     onClick={openContextMenu}
                     title="Меню"
-                    className={(mouseContextMenuItem?.id === item.id ? 'folder-tree-item_item-actions--lighten' : '')}
                 >
                    ☰
                 </button>

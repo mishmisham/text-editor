@@ -15,7 +15,7 @@ const MainMenu = () => {
             text: '+',
             title: 'Добавить рабочее пространство',
             action: () => {
-                createNewView();
+                createNewView(true);
             }
         },
     ]

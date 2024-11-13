@@ -3,7 +3,6 @@ import './TreeItemComponent.sass';
 import ContextMenu from './components/ContextMenu/ContextMenu';
 import ItemDefaultMainContent from './components/ItemDefaultMainContent/ItemDefaultMainContent';
 import ItemRenameMainContent from './components/ItemRenameMainContent/ItemRenameMainContent';
-import ConfirmDeleteItemModal from './components/ConfirmDeleteItemModal/ConfirmDeleteItemModal';
 import useDebounced from '@/hooks/useDebounced';
 
 import FileContext from '@/components/app/context/FileContext/FileContext.js';
@@ -14,7 +13,6 @@ const TreeItemComponent = ({
     item,
     level,
     leftPadding,
-    contentRef,
 }) => {
 
     const {
@@ -53,11 +51,6 @@ const TreeItemComponent = ({
 
     const itemStyles = {
         paddingLeft: 32 + leftPadding + 'px',
-    }
-
-    const confirmDeleteModal = useRef(null);
-    const deleteTreeItem = () => {
-        confirmDeleteModal.current.openModal(true)
     }
 
     const onMouseUp = (e) => {
@@ -144,7 +137,6 @@ const TreeItemComponent = ({
                 <ContextMenu
                     item={item}
                     leftPadding={leftPadding}
-                    deleteTreeItem={deleteTreeItem}
                 />
             }
             {  children && isOpen &&
@@ -157,7 +149,6 @@ const TreeItemComponent = ({
                                 item={child}
                                 level={(level + 1)}
                                 leftPadding={(leftPadding + 10)}
-                                contentRef={contentRef}
                             />
                         )
                     })
@@ -165,11 +156,6 @@ const TreeItemComponent = ({
                 </div>
             }
         </div>
-        <ConfirmDeleteItemModal
-            ref={confirmDeleteModal}
-            item={item}
-            contentRef={contentRef}
-        />
         </>
     )
 }

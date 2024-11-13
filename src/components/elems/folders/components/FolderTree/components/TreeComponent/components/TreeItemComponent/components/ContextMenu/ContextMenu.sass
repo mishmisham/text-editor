@@ -5,14 +5,14 @@
     width: auto
 
     &-inner
-        padding: 4px
         @include flexbox(row, flex-start, flex-start)
+        padding: 4px
 
     &-item
         @include flexbox(column, center, center)
         position: relative
         white-space: nowrap
-        // height: 22px
+        width: auto
         margin-right: 4px
         color: $textColor
         border: 0

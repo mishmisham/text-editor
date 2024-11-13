@@ -9,8 +9,23 @@ const ItemRenameMainContent = ({
     item,
     itemIcon,
 }) => {
+
+    const {
+        renameTreeItem,
+    } = useContext(FileContext);
+
+    const {
+        cancelRename,
+        setRenameID,
+    } = useContext(FolderTreeContext);
+
     const [fileName, setFileName] = useState(item.name);
     const renameRef = useRef(null);
+
+    const saveRename = () => {
+        renameTreeItem(item.id, fileName);
+        setRenameID(null);
+    }
 
     useEffect(() => {
         if (renameRef.current) {
@@ -32,36 +47,39 @@ const ItemRenameMainContent = ({
             cancelRename();
         }
     });
+
+    const actions = [
+        {
+            title: 'Отмена',
+            label: '✕',
+            action: () => cancelRename()
+        },
+        {
+            title: 'Переименовать',
+            label: '✔',
+            action: () => saveRename()
+        },
+    ];
     
-    const {
-        renameTreeItem,
-    } = useContext(FileContext);
-
-    const {
-        cancelRename,
-        setRenameID,
-    } = useContext(FolderTreeContext);
-
-    const saveRename = () => {
-        renameTreeItem(item.id, fileName);
-        setRenameID(null);
-    }
-
     return (
         ( <>
             <div className="folder-tree-item_item-actions">
-                <button
-                    onClick={cancelRename}
-                    title="Отмена"
-                >
-                    ✕
-                </button>
-                <button
-                    onClick={saveRename}
-                    title="Переименовать"
-                >
-                    ✔
-                </button>
+            {
+                actions.map((action, i) => {
+                    return (
+                        action &&
+                        <button
+                            onClick={action.action}
+                            title={action.title}
+                            key={i}
+                        >
+                            <span>
+                                { action.label }
+                            </span>
+                        </button>
+                    )
+                })
+            }
             </div>
 
             <span className="folder-tree-item_type-icon">

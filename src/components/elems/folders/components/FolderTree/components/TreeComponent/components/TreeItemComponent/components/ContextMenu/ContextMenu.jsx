@@ -12,8 +12,6 @@ const ContextMenu = ({
 }) => {
 
     const {
-        moveTreeItemToFolder,
-        pasteCopyOfTreeItem,
         checkForMayCutOrCopyHereHere
     } = useContext(FileContext);
 
@@ -22,75 +20,52 @@ const ContextMenu = ({
         startRenameItem,
         setCutOrCopyItem,
         setContextMenuItem,
+        confirmDeleteModal,
+
+        // folder context usage
+        createFile,
+        createFolder,
+        pasteFolderItem,
     } = useContext(FolderTreeContext);
 
+    const isFolder = item.type === 'folder';
     const mayPaste = useMemo(() => {
-        return item.type === 'folder' && cutOrCopyItem && checkForMayCutOrCopyHereHere(cutOrCopyItem, item, cutOrCopyItem.mode === 'copy');
-    }, [checkForMayCutOrCopyHereHere, cutOrCopyItem, item]);
+        return isFolder && cutOrCopyItem && checkForMayCutOrCopyHereHere(cutOrCopyItem, item, cutOrCopyItem.mode === 'copy');
+    }, [checkForMayCutOrCopyHereHere, cutOrCopyItem, isFolder, item]);
 
     const actions = [
+
+        isFolder && {
+            title: '+ File',
+            action: () => createFile(item.id)
+        },
+        isFolder && {
+            title: '+ Folder',
+            action: () => createFolder(item.id)
+        },
         {
             title: 'Copy',
-            action: () => {
-                setCutOrCopyItem({
-                    item,
-                    mode: 'copy'
-                });
-                closeContextMenu();
-            }
+            action: () => setCutOrCopyItem({ mode: 'copy', item })
         },
         {
             title: 'Cut',
-            action: () => {
-                setCutOrCopyItem({
-                    item,
-                    mode: 'cut'
-                });
-                closeContextMenu();
-            }
+            action: () => setCutOrCopyItem({ mode: 'cut', item })
         },
-        
-        mayPaste ? {
+        mayPaste && {
             title: 'Paste',
-            action: () => {
-                if (cutOrCopyItem.mode === 'cut') {
-                    moveTreeItemToFolder(cutOrCopyItem.item, item);
-                    setCutOrCopyItem(null);
-                }
-                if (cutOrCopyItem.mode === 'copy') {
-                    pasteCopyOfTreeItem(cutOrCopyItem.item, item);
-                }
-                closeContextMenu();
-            }
-        } : null,
-
-        mayPaste ? {
+            action: () => pasteFolderItem(cutOrCopyItem.item, item, false, true)
+        },
+        mayPaste && {
             title: 'Paste & replace',
-            action: () => {
-                if (cutOrCopyItem.mode === 'cut') {
-                    moveTreeItemToFolder(cutOrCopyItem.item, item, true);
-                    setCutOrCopyItem(null);
-                }
-                if (cutOrCopyItem.mode === 'copy') {
-                    pasteCopyOfTreeItem(cutOrCopyItem.item, item, true);
-                }
-                closeContextMenu();
-            }
-        } : null,
-
+            action: () => pasteFolderItem(cutOrCopyItem.item, item, true, true)
+        },
         {
             title: 'Rename',
-            action: () => {
-                startRenameItem(item.id);
-                closeContextMenu();
-            }
+            action: () => startRenameItem(item.id)
         },
         {
             title: 'Delete',
-            action: () => {
-                deleteTreeItem();
-                closeContextMenu();
-            }
+            action: () => confirmDeleteModal?.current?.openModal(item)
         }
     ];
 
@@ -103,6 +78,11 @@ const ContextMenu = ({
             closeContextMenu();
         }
     })
+
+    const onClick = (e, action) => {
+        action();
+        closeContextMenu();
+    }
 
     const menuMargin = {
         marginLeft: -4 + leftPadding + 'px'
@@ -119,7 +99,7 @@ const ContextMenu = ({
                     return (
                         action &&
                         <button
-                            onClick={action.action}
+                            onClick={e=>onClick(e, action.action)}
                             className="folder-tree_context-menu-item"
                             title={action.title}
                             key={i}

@@ -1,28 +1,22 @@
 
-import React, { useMemo, useContext } from "react";
+import React, { useContext } from "react";
 import InputText from '@/components/primitive/inputs/InputText/InputText';
 import './MainMenu.sass';
 
-import FileContext from '@/components/app/context/FileContext/FileContext.js';
 import FolderTreeContext from '../../context/FolderTreeContext.js';
 
 const MainMenu = () => {
 
     const {
-        tree,
-        createNewFolder,
-        getTreeItemByID,
-        createNewFile,
-    } = useContext(FileContext);
-
-    const {
+        // folder context
         openFolders,
-        currentSelected,
         search,
         setSearch,
         setOpenFolders,
-        setRenameID,
-        setCurrentSelected,
+
+        // with file context usage
+        createFile,
+        createFolder,
     } = useContext(FolderTreeContext);
 
     const onSearch = (value) => {
@@ -30,46 +24,16 @@ const MainMenu = () => {
         setSearch(value);
     }
 
-    const openSelectedFolderIfNot = () => {
-        if (openFolders.indexOf(currentSelectedFolder) === -1) {
-            setOpenFolders([...openFolders, currentSelectedFolder])
-        }
-    }
-
-    const currentSelectedFolder = useMemo(() => {
-        if (!currentSelected) {
-            return null;
-        }
-        const { item } = getTreeItemByID(currentSelected);
-        if (!item) {
-            return null;
-        }
-
-        return item.type === 'folder' ? currentSelected : (item.parent ? item.parent : 0);
-    }, [currentSelected, tree]);
-
     const buttons = [
         {
             text: '☵',
             title: 'Создать файл',
-            action: () => {
-                const newFile = createNewFile(currentSelectedFolder);
-
-                openSelectedFolderIfNot();
-                setCurrentSelected(newFile.id);
-                setRenameID(newFile.id);
-            }
+            action: () => createFile()
         },
         {
             text: '❒',
             title: 'Создать папку',
-            action: () => {
-                const newFolder = createNewFolder(currentSelectedFolder);
-               
-                openSelectedFolderIfNot();
-                setCurrentSelected(newFolder.id);
-                setRenameID(newFolder.id);
-            }
+            action: () => createFolder()
         },
         {
             text: '-',

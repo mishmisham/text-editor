@@ -1,19 +1,21 @@
 
 
-export const createNewView = (switchToNew=false, contextData) => {
+export const createNewView = (switchToNew=false, withFile=null, contextData) => {
     const {
         views,
         setViews,
         currentView,
         setCurrentView,
     } = contextData;
-    setViews([...views, []]);
+
+    const newViewArray = withFile ? [withFile] : [];
+    setViews([...views, newViewArray]);
 
     if (switchToNew) {
         setCurrentView({
             ...currentView,
-            file: null,
-            view: views.length - 1
+            file: withFile,
+            view: views.length
         });
     }
 }

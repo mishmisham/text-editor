@@ -7,11 +7,9 @@ import TreeComponent from './components/TreeComponent/TreeComponent';
 import FolderTreeProvider from './context/FolderTreeProvider';
 
 const FolderTree = () => {
-
     return (
         <FolderTreeProvider>
             <div className="folder-tree">
-                
                 <div className="folder-tree_header">
                     <MainMenu />
                 </div>

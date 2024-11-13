@@ -28,8 +28,8 @@ const ViewProvider = ({ children }) => {
         ViewProviderMethods.isOpenFile(itemID, contextData);
     };
 
-    const createNewView = (switchToNew=false) => {
-        ViewProviderMethods.createNewView(switchToNew, contextData);
+    const createNewView = (switchToNew=false, withFile=null) => {
+        ViewProviderMethods.createNewView(switchToNew, withFile, contextData);
     }
 
     const openFileToCurrentView = (openFileID) => {

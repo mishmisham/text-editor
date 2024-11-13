@@ -1,15 +1,14 @@
-import React, { useContext, useRef, forwardRef, useImperativeHandle } from "react";
+import React, { useContext, useRef, forwardRef, useState, useImperativeHandle } from "react";
 import useAddEventListener from '@/hooks/useAddEventListener';
 
 import ModalComponent from '@/components/primitive/ModalComponent/ModalComponent.jsx';
 import FileContext from '@/components/app/context/FileContext/FileContext.js';
 import ViewContext from '@/components/app/context/ViewContext/ViewContext.js';
-import FolderTreeContext from '../../../../../../context/FolderTreeContext.js';
+import FolderTreeContext from '../../../../context/FolderTreeContext.js';
 
-const ConfirmDeleteItemModal = ({
-    item,
-    contentRef
-}, ref) => {
+const ConfirmDeleteItemModal = (_, ref) => {
+   
+    const [selectedItem, setSelectedItem] = useState(null);
 
     const {
         deleteTreeItem,
@@ -20,29 +19,35 @@ const ConfirmDeleteItemModal = ({
     } = useContext(ViewContext);
 
     const {
+        contentRef,
         onRemoveChildItemsCallback,
     } = useContext(FolderTreeContext);
     
     const modal = useRef(null);
 
     const confirmDelete = () => {
-        deleteTreeItem(item.id, (child)=>{
+        deleteTreeItem(selectedItem.id, (child)=>{
             onRemoveChildItemsCallback(child);
             removeFileFromAllViews(child.item.id);
         });
+        closeModal();
     }
 
-    const openModal = () => {
-        modal.current.openModal(true);
+    const openModal = (treeItem) => {
+        setSelectedItem(treeItem);
+        setTimeout(() => {
+            modal.current.openModal(true);
+        });
     }
 
     const closeModal = () => {
         modal.current.openModal(false);
+        setSelectedItem(null);
     }
 
     useImperativeHandle(ref, () => ({
-        openModal() {
-            openModal();
+        openModal(treeItem) {
+            openModal(treeItem);
         },
     }));
 
@@ -88,7 +93,7 @@ const ConfirmDeleteItemModal = ({
                         textAlign: 'center',
                         fontWeight: 'bold'
                     }}>
-                        <span>Удалить {item.name} ?</span>
+                        <span>Удалить {selectedItem?.name} ?</span>
                     </div>
                 )
             }}
