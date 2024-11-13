@@ -15,6 +15,7 @@ const ItemDefaultMainContent = ({
     } = useContext(ViewContext);
 
     const {
+        renameID,
         openFolder,
         closeFolder,
         setContextMenuItem,

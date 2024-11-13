@@ -23,6 +23,6 @@ export default createContext({
     setMouseOverItem: ()=>{},
     setMouseMoveAbsoluteCoordinates: ()=>{},
 
-    resetMouse: ()=>{},
+    resetMouseSelectionsFolderTree: ()=>{},
     checkIfNeedOpenHoveredFolder: ()=>{},
 });

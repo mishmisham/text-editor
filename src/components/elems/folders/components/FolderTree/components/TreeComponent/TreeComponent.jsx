@@ -22,7 +22,7 @@ const TreeComponent = () => {
         renameID,
         mouseDownItem,
         mouseMoveAbsoluteCoordinates,
-        resetMouse,
+        resetMouseSelectionsFolderTree,
         setMouseMoveAbsoluteCoordinates,
     } = useContext(FolderTreeContext);
 
@@ -38,12 +38,12 @@ const TreeComponent = () => {
 
     const onDrop = (e) => {
         if (e.target.classList.contains('.folder-tree-item') || e.target.closest('.folder-tree-item')) {
-            resetMouse();
+            resetMouseSelectionsFolderTree();
             return;
         }
 
         moveTreeItemToFolder(mouseDownItem, {type:'root'});
-        resetMouse();
+        resetMouseSelectionsFolderTree();
     }
 
     const onMouseMove = (e) => {
@@ -65,7 +65,7 @@ const TreeComponent = () => {
         <div
             onMouseMove={onMouseMove}
             onMouseUp={onDrop}
-            onMouseLeave={resetMouse}
+            onMouseLeave={resetMouseSelectionsFolderTree}
             className="folder-tree_content"
             ref={contentRef}
         >

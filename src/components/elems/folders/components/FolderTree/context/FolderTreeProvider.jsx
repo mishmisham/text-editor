@@ -1,5 +1,7 @@
 import FolderTreeContext from './FolderTreeContext.js';
 import FolderTreeReducer from './FolderTreeReducer.js'
+import * as FolderTreeProviderMethods from './methods';
+
 import { useReducer } from "react";
 
 const FolderTreeProvider = ({ children }) => {
@@ -28,7 +30,6 @@ const FolderTreeProvider = ({ children }) => {
         payload: value,
         type: 'setOpenFolders'
     });
-    
     const setCurrentSelected = (value) => dispatch({
         payload: value,
         type: 'setCurrentSelected'
@@ -37,8 +38,6 @@ const FolderTreeProvider = ({ children }) => {
         payload: value,
         type: 'setCutOrCopyItem'
     });
-
-
     const setContextMenuItem = (value) => dispatch({
         payload: value,
         type: 'setContextMenuItem'
@@ -56,110 +55,83 @@ const FolderTreeProvider = ({ children }) => {
         type: 'setMouseMoveAbsoluteCoordinates'
     });
 
-    const resetMouse = () => {
-        setMouseDownItem(null);
-        setMouseOverItem(null);
-        setMouseMoveAbsoluteCoordinates(null);
+
+    // mouse
+
+    const resetMouseSelectionsFolderTree = () => {
+        FolderTreeProviderMethods.resetMouseSelectionsFolderTree(contextData);
     }
 
     const isDropFileTarget = (itemID) => {
-        const { mouseDownItem, mouseOverItem } = state;
-        return mouseDownItem
-                    && mouseOverItem
-                    && mouseDownItem.id !== itemID
-                    && mouseOverItem.id === itemID;
+        return FolderTreeProviderMethods.isDropFileTarget(itemID, contextData);
     };
 
-    const checkIfNeedOpenHoveredFolder = (id) => {
-        const { mouseOverItem, mouseDownItem } = state;
-
-        const notNeed = !mouseOverItem
-        || mouseOverItem.id !== id
-        || mouseOverItem.type !== 'folder'
-        || !mouseDownItem
-        || mouseDownItem.id === mouseOverItem.id
-
-        return !notNeed;
+    const checkIfNeedOpenHoveredFolder = (itemID) => {
+        return FolderTreeProviderMethods.checkIfNeedOpenHoveredFolder(itemID, contextData);
     }
 
+
+    // folders
+
     const isOpenFolder = (itemID) => {
-        const { openFolders } = state;
-        return openFolders.indexOf(itemID) !== -1
+        return FolderTreeProviderMethods.isOpenFolder(itemID, contextData);
     };
 
     const openFolder = (itemID) => {
-        const { openFolders } = state;
-        const newFolderList = [ ...openFolders ]
-                                    .filter(folderID=>folderID !== itemID);
-        newFolderList.push(itemID);
-        setOpenFolders(newFolderList);
+        return FolderTreeProviderMethods.openFolder(itemID, contextData);
     }
 
     const closeFolder = (itemID) => {
-        const { openFolders } = state;
-        const newFolderList = [ ...openFolders ]
-                                    .filter(folderID=>folderID !== itemID);
-        setOpenFolders(newFolderList);
-    }
-
-    const startRenameItem = (itemID) => {
-        setCurrentSelected(itemID);
-        setRenameID(itemID);
-    }
-
-    const cancelRename = () => {
-        setRenameID(null);
+        FolderTreeProviderMethods.closeFolder(itemID, contextData);
     }
 
     const onRemoveChildItemsCallback = (child) => {
-        const { 
-            currentSelected,
-            renameID,
-            openFolders,
-        } = state;
+        FolderTreeProviderMethods.onRemoveChildItemsCallback(child, contextData);
+    }
 
-        if (currentSelected === child.item.id) {
-            setCurrentSelected(null);
-        }
-        if (renameID === child.item.id) {
-            setRenameID(null);
-        }
-        if (openFolders.indexOf(child.item.id)) {
-            const newOpenFolders = openFolders.filter(id => id !== child.item.id);
-            setOpenFolders(newOpenFolders);
-        }
+
+    // rename
+
+    const startRenameItem = (itemID) => {
+        FolderTreeProviderMethods.startRenameItem(itemID, contextData);
+    }
+
+    const cancelRename = () => {
+        FolderTreeProviderMethods.cancelRename(contextData);
+    }
+
+    const contextData = {
+        ...state,
+
+        setSearch,
+        setRenameID,
+        setOpenFolders,
+        setCurrentSelected,
+        setCutOrCopyItem,
+
+        setContextMenuItem,
+        setMouseDownItem,
+        setMouseOverItem,
+        setMouseMoveAbsoluteCoordinates,
+
+        isDropFileTarget,
+
+        resetMouseSelectionsFolderTree,
+        checkIfNeedOpenHoveredFolder,
+
+        isOpenFolder,
+        openFolder,
+        closeFolder,
+
+        startRenameItem,
+        cancelRename,
+
+        onRemoveChildItemsCallback,
     }
 
     return (
-        <FolderTreeContext.Provider value={{
-            ...state,
-
-            setSearch,
-            setRenameID,
-            setOpenFolders,
-            setCurrentSelected,
-            setCutOrCopyItem,
-
-            setContextMenuItem,
-            setMouseDownItem,
-            setMouseOverItem,
-            setMouseMoveAbsoluteCoordinates,
-
-            isDropFileTarget,
-
-            resetMouse,
-            checkIfNeedOpenHoveredFolder,
-
-            isOpenFolder,
-            openFolder,
-            closeFolder,
-
-            startRenameItem,
-            cancelRename,
-
-            onRemoveChildItemsCallback,
-        }}>
-        { children }
+        <FolderTreeContext.Provider value={contextData}>
+            { children }
         </FolderTreeContext.Provider>
     );
 };

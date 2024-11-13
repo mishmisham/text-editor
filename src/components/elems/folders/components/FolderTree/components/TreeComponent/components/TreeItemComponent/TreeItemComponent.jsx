@@ -38,7 +38,7 @@ const TreeItemComponent = ({
         setMouseOverItem,
         mouseContextMenuItem,
         setContextMenuItem,
-        resetMouse,
+        resetMouseSelectionsFolderTree,
 
         isOpenFolder,
         openFolder,
@@ -64,7 +64,7 @@ const TreeItemComponent = ({
         setCurrentSelected(item.id);
         const moveDone = moveTreeItemToFolder(mouseDownItem, item);
         if (moveDone) {
-            resetMouse();
+            resetMouseSelectionsFolderTree();
         }
     }
 
