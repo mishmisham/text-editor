@@ -8,7 +8,6 @@ const ItemDefaultMainContent = ({
     itemIcon,
     isFolder,
     isOpen,
-    deleteItem,
 }) => {
 
     const {
@@ -18,8 +17,9 @@ const ItemDefaultMainContent = ({
     const {
         openFolder,
         closeFolder,
-        startRenameItem,
+        setContextMenuItem,
         setCurrentSelected,
+        mouseContextMenuItem
     } = useContext(FolderTreeContext);
     
     const toggleItem = () => {
@@ -32,20 +32,21 @@ const ItemDefaultMainContent = ({
         setCurrentSelected(item.id);
     }
 
+    const openContextMenu = () => {
+        setTimeout(() => {
+            setContextMenuItem(item);
+        })
+    }
+
     return (
         ( <>
             <div className="folder-tree-item_item-actions">
                 <button
-                    onClick={deleteItem}
-                    title="Удалить"
+                    onClick={openContextMenu}
+                    title="Меню"
+                    className={(mouseContextMenuItem?.id === item.id ? 'folder-tree-item_item-actions--lighten' : '')}
                 >
-                    ☢
-                </button>
-                <button
-                    onClick={e=>startRenameItem(item.id)}
-                    title="Переименовать"
-                >
-                    ✎
+                   ☰
                 </button>
             </div>
 

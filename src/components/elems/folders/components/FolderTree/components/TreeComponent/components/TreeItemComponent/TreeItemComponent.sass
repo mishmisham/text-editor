@@ -1,10 +1,13 @@
 @import '@/stylesheet/variables'
 
+.folder-tree_content_inner
+    >.folder-tree-item:last-of-type
+        padding-bottom: 32px
+        
 .folder-tree-item
     @include flexbox(column, flex-start, flex-start)
     position: relative
-    // border-left: 1px dotted rgba(255,255,255,.15)
-    
+
     &--current
         >.folder-tree-item_item
             background: rgba(255,255,255,.05)
@@ -51,13 +54,14 @@
                 color: lighten($textColor, 20)
         
         &-actions
-            @include flexbox(row, flex-start, flex-start)
+            @include flexbox(row, flex-end, flex-start)
             position: absolute
             top: 0px
-            left: -30px
+            left: -32px
             width: 30px
             opacity: .45
             transition: .15s ease-in-out
+
             button
                 width: 14px
                 max-width: 14px
@@ -83,3 +87,6 @@
 
     &_children
             @include flexbox(column, flex-start, flex-start)
+
+.folder-tree-item_item-actions--lighten
+    color: lighten($textColor, 40)!important

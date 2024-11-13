@@ -1,6 +1,6 @@
-import { getBreadCrumbs } from './getBreadCrumbs';
+import { getTreeItemPath } from '../getters/getTreeItemPath';
 
-export const searchingInFiles = (value, tree, useBreadcrumbs=false) => {
+export const searchTextInAllFiles = (value, tree, useBreadcrumbs=false) => {
     return new Promise( async (resolve) => {
 
         const results = [];
@@ -38,7 +38,7 @@ export const searchingInFiles = (value, tree, useBreadcrumbs=false) => {
                 }
 
                 if (useBreadcrumbs) {
-                    resultItem.path = getBreadCrumbs(file, tree)
+                    resultItem.path = getTreeItemPath(file, tree)
                 }
 
                 results.push(resultItem);

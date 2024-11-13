@@ -12,8 +12,8 @@ const TreeComponent = () => {
     const contentRef = useRef(null);
 
     const {
-        moveFile,
-        findTreeItemsByName,
+        moveTreeItemToFolder,
+        searchTreeItemsByName,
         getAllRootTreeItems,
     } = useContext(FileContext);
 
@@ -31,8 +31,8 @@ const TreeComponent = () => {
     }, [getAllRootTreeItems]);
 
     const foundItems = useMemo(() => {
-        return findTreeItemsByName(search);
-    }, [findTreeItemsByName, search]);
+        return searchTreeItemsByName(search);
+    }, [searchTreeItemsByName, search]);
 
     const itemList = search ? foundItems : rootItems;
 
@@ -42,7 +42,7 @@ const TreeComponent = () => {
             return;
         }
 
-        moveFile(mouseDownItem, {type:'root'});
+        moveTreeItemToFolder(mouseDownItem, {type:'root'});
         resetMouse();
     }
 

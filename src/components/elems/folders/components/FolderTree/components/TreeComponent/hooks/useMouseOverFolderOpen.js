@@ -15,7 +15,7 @@ export default function useMouseOverFolderOpen () {
         }
 
         mouseOverItem.openFolder();
-    }, 500);
+    }, 400);
 
     useWatch(()=>{
         if (!mouseOverItem) {

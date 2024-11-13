@@ -25,8 +25,6 @@ const ViewItem = ({
         closeOneView(view.index);
     }
 
-    console.log(view)
-
     return (
         <div
             className={view.wrapperClassName}

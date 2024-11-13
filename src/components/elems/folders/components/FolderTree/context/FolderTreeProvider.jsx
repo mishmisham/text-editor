@@ -10,9 +10,9 @@ const FolderTreeProvider = ({ children }) => {
         openFolders: [],
         cutOrCopyItem: null,
 
-        mouseContextMenuItem: null,
         mouseDownItem: null,
         mouseOverItem: null,
+        mouseContextMenuItem: null,
         mouseMoveAbsoluteCoordinates: null,
     });
 

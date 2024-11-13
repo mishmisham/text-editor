@@ -3,7 +3,10 @@
 .folder-tree_context-menu
     @include flexbox(row, flex-start, flex-start)
     width: auto
-    padding: 4px
+
+    &-inner
+        padding: 4px
+        @include flexbox(row, flex-start, flex-start)
 
     &-item
         @include flexbox(column, center, center)

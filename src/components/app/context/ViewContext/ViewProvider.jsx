@@ -1,6 +1,7 @@
 import ViewContext from './ViewContext.js';
 import ViewReducer from './ViewReducer.js'
 import { useReducer } from "react";
+import * as ViewProviderMethods from './methods';
 
 import {
     demofolders
@@ -23,118 +24,58 @@ const ViewProvider = ({ children }) => {
         type: 'setCurrentView'
     });
 
+    const isOpenFile = (itemID) => {
+        ViewProviderMethods.isOpenFile(itemID, contextData);
+    };
+
+    const createNewView = (switchToNew=false) => {
+        ViewProviderMethods.createNewView(switchToNew, contextData);
+    }
+
     const openFileToCurrentView = (openFileID) => {
-        const { views, currentView } = state;
-        const currentViewFileIDs = views[currentView.view];
-
-        if (currentViewFileIDs.indexOf(openFileID) === -1) {
-            const newViews = [...views];
-            newViews[currentView.view].push(openFileID);
-            setViews(newViews);
-        }
-
-        setCurrentView({
-            ...currentView,
-            file: openFileID
-        });
-    }
-
-    const closeFileIfCurrentView = (closeFileID) => {
-        const { views, currentView } = state;
-        const { view, file } = currentView;
-        if (file === closeFileID) {
-            const newOpenFileID = views[view].length ? views[view][0] : null;
-           
-            setCurrentView({
-                ...currentView,
-                file: newOpenFileID
-            });
-        }
-    }
-
-    const closeFileInTargetView = (closeFileID, viewIndex) => {
-        const { views } = state;
-
-        const newViews = [...views]
-        newViews[viewIndex] = newViews[viewIndex].filter(id=>id !== closeFileID);
-
-        closeFileIfCurrentView(closeFileID);
-        setViews(newViews);  
-    }
-
-    const removeFileFromAllViews = (closeFileID) => {
-        const { views } = state;
-
-        const newViews = [...views];
-
-        newViews.forEach(view => {
-            const viewIndex = view.indexOf(closeFileID);
-            if (viewIndex !== -1) {
-                view.splice(viewIndex, 1);
-            }
-        });
-
-        setViews(newViews);  
-        closeFileIfCurrentView(closeFileID);
-    }
-
-    const closeOneView = (viewIndex) => {
-        const { views, currentView } = state;
-        const newViews = [...views];
-        newViews.splice(viewIndex, 1);
-
-        if (!newViews.length) {
-            newViews.push([]);
-        }
-
-        if (currentView.view === viewIndex) {
-            setCurrentView({
-                ...currentView,
-                view: 0,
-                file: newViews[0].length ? newViews[0][0] : null,
-            });
-        }
-
-        setViews(newViews);
-    }
-
-    const createNewView = () => {
-        const { views } = state;
-        setViews([...views, []])
+        ViewProviderMethods.openFileToCurrentView(openFileID, contextData);
     }
 
     const switchViewToSelectedFile = (fileID, viewIndex) => {
-        const { currentView } = state;
-        setCurrentView({
-            ...currentView,
-            file: fileID,
-            view: viewIndex
-        })
+        ViewProviderMethods.switchViewToSelectedFile(fileID, viewIndex, contextData);
     }
 
-    const isOpenFile = (itemID, views) => {
-        return views.filter(view => {
-            return view.indexOf(itemID) !== -1;
-        }).length ? true : false;
-    };
+    const closeFileIfCurrentView = (closeFileID) => {
+        ViewProviderMethods.closeFileIfCurrentView(closeFileID, contextData);
+    }
+
+    const closeFileInTargetView = (closeFileID, viewIndex) => {
+        ViewProviderMethods.closeFileInTargetView(closeFileID, viewIndex, contextData);
+    }
+
+    const closeOneView = (viewIndex) => {
+        ViewProviderMethods.closeOneView(viewIndex, contextData);
+    }
+
+    const removeFileFromAllViews = (closeFileID) => {
+        ViewProviderMethods.removeFileFromAllViews(closeFileID, contextData);
+    }
+
+
+    const contextData = {
+        ...state,
+
+        setViews,
+        setCurrentView,
+
+        isOpenFile,
+        openFileToCurrentView,
+        closeFileInTargetView,
+        closeFileIfCurrentView,
+        removeFileFromAllViews,
+        switchViewToSelectedFile,
+        
+        createNewView,
+        closeOneView,
+    }
 
     return (
-        <ViewContext.Provider value={{
-            ...state,
-
-            setViews,
-            setCurrentView,
-
-            isOpenFile,
-            openFileToCurrentView,
-            closeFileInTargetView,
-            closeFileIfCurrentView,
-            removeFileFromAllViews,
-            switchViewToSelectedFile,
-            
-            createNewView,
-            closeOneView,
-        }}>
+        <ViewContext.Provider value={contextData}>
         { children }
         </ViewContext.Provider>
     );

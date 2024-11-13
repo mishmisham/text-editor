@@ -1,6 +1,6 @@
 
 
-export const replaceTextsInFiles = (fileArray, searchText, replaceValue, $contextData) => {
+export const replaceTextInFiles = (fileArray, searchText, replaceValue, $contextData) => {
     const {
         tree, setTree
     } = $contextData;

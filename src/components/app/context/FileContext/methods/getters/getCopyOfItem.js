@@ -1,6 +1,6 @@
 
 
-export const copyItem = (item, parentID, idCompareArray, contextData) => {
+export const getCopyOfItem = (item, parentID, idCompareArray, contextData) => {
     const {
         generateNewUniqueID
     } = contextData;

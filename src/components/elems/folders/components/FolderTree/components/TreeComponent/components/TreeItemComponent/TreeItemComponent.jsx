@@ -4,6 +4,7 @@ import ContextMenu from './components/ContextMenu/ContextMenu';
 import ItemDefaultMainContent from './components/ItemDefaultMainContent/ItemDefaultMainContent';
 import ItemRenameMainContent from './components/ItemRenameMainContent/ItemRenameMainContent';
 import ConfirmDeleteItemModal from './components/ConfirmDeleteItemModal/ConfirmDeleteItemModal';
+import useDebounced from '@/hooks/useDebounced';
 
 import FileContext from '@/components/app/context/FileContext/FileContext.js';
 import ViewContext from '@/components/app/context/ViewContext/ViewContext.js';
@@ -17,12 +18,11 @@ const TreeItemComponent = ({
 }) => {
 
     const {
-        findFolderCurrentChildren,
-        moveFile,
+        getFolderCurrentChildren,
+        moveTreeItemToFolder,
     } = useContext(FileContext);
 
     const {
-        views,
         isOpenFile,
     } = useContext(ViewContext);
 
@@ -47,8 +47,8 @@ const TreeItemComponent = ({
     } = useContext(FolderTreeContext);
     
     const isFolder = item.type === 'folder';
-    const isOpen = useMemo(()=>isFolder ? isOpenFolder(item.id, openFolders) : isOpenFile(item, views), [isFolder, isOpenFile, isOpenFolder, item, openFolders, views]);
-    const children = useMemo(()=>isFolder && isOpen ? findFolderCurrentChildren(item.id) : null, [findFolderCurrentChildren, isFolder, isOpen, item.id]);
+    const isOpen = useMemo(()=>isFolder ? isOpenFolder(item.id, openFolders) : isOpenFile(item), [isFolder, isOpenFile, isOpenFolder, item, openFolders]);
+    const children = useMemo(()=>isFolder && isOpen ? getFolderCurrentChildren(item.id) : null, [getFolderCurrentChildren, isFolder, isOpen, item.id]);
     const itemIcon = useMemo(()=>isFolder ? (isOpen ? '📂' : '📁') : '📒', [isFolder, isOpen]);
 
     const itemStyles = {
@@ -56,33 +56,37 @@ const TreeItemComponent = ({
     }
 
     const confirmDeleteModal = useRef(null);
-    const deleteItem = () => {
+    const deleteTreeItem = () => {
         confirmDeleteModal.current.openModal(true)
     }
 
     const onMouseUp = (e) => {
         setCurrentSelected(item.id);
-        const moveDone = moveFile(mouseDownItem, item);
+        const moveDone = moveTreeItemToFolder(mouseDownItem, item);
         if (moveDone) {
             resetMouse();
         }
     }
 
     const onMouseDown = (e) => {
-        if (mouseDownItem?.id === item.id) {
+        if (mouseDownItem?.id === item.id || currentSelected !== item.id) {
             return;
         }
         setMouseDownItem(item);
     }
 
-    const onMouseOver = (e) => {
-        if (mouseOverItem?.id === item.id) {
-            return;
-        }
+    const refreshMouseOver = useDebounced(() => {
         setMouseOverItem({
             ...item,
             openFolder: e=>openFolder(item.id)
         });
+    }, 30);
+
+    const onMouseOver = (e) => {
+        if (!mouseDownItem?.id || mouseOverItem?.id === item.id) {
+            return;
+        }
+        refreshMouseOver();
     }
 
     const onMouseLeave = () => {
@@ -125,7 +129,6 @@ const TreeItemComponent = ({
                         itemIcon={itemIcon}
                         isFolder={isFolder}
                         isOpen={isOpen}
-                        deleteItem={deleteItem}
                     />
                 }
                 { renameID === item.id && 
@@ -141,7 +144,7 @@ const TreeItemComponent = ({
                 <ContextMenu
                     item={item}
                     leftPadding={leftPadding}
-                    deleteItem={deleteItem}
+                    deleteTreeItem={deleteTreeItem}
                 />
             }
             {  children && isOpen &&

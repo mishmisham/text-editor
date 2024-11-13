@@ -8,13 +8,13 @@ import FolderTreeContext from '../../../../../../context/FolderTreeContext.js';
 const ContextMenu = ({
     item,
     leftPadding,
-    deleteItem,
+    deleteTreeItem,
 }) => {
 
     const {
-        moveFile,
-        addCopyOfItem,
-        checkForMayCutOrCopyHere
+        moveTreeItemToFolder,
+        pasteCopyOfTreeItem,
+        checkForMayCutOrCopyHereHere
     } = useContext(FileContext);
 
     const {
@@ -25,8 +25,8 @@ const ContextMenu = ({
     } = useContext(FolderTreeContext);
 
     const mayPaste = useMemo(() => {
-        return item.type === 'folder' && cutOrCopyItem && checkForMayCutOrCopyHere(cutOrCopyItem, item, cutOrCopyItem.mode === 'copy');
-    }, [checkForMayCutOrCopyHere, cutOrCopyItem, item]);
+        return item.type === 'folder' && cutOrCopyItem && checkForMayCutOrCopyHereHere(cutOrCopyItem, item, cutOrCopyItem.mode === 'copy');
+    }, [checkForMayCutOrCopyHereHere, cutOrCopyItem, item]);
 
     const actions = [
         {
@@ -54,11 +54,11 @@ const ContextMenu = ({
             title: 'Paste',
             action: () => {
                 if (cutOrCopyItem.mode === 'cut') {
-                    moveFile(cutOrCopyItem.item, item);
+                    moveTreeItemToFolder(cutOrCopyItem.item, item);
                     setCutOrCopyItem(null);
                 }
                 if (cutOrCopyItem.mode === 'copy') {
-                    addCopyOfItem(cutOrCopyItem.item, item);
+                    pasteCopyOfTreeItem(cutOrCopyItem.item, item);
                 }
                 closeContextMenu();
             }
@@ -68,11 +68,11 @@ const ContextMenu = ({
             title: 'Paste & replace',
             action: () => {
                 if (cutOrCopyItem.mode === 'cut') {
-                    moveFile(cutOrCopyItem.item, item, true);
+                    moveTreeItemToFolder(cutOrCopyItem.item, item, true);
                     setCutOrCopyItem(null);
                 }
                 if (cutOrCopyItem.mode === 'copy') {
-                    addCopyOfItem(cutOrCopyItem.item, item, true);
+                    pasteCopyOfTreeItem(cutOrCopyItem.item, item, true);
                 }
                 closeContextMenu();
             }
@@ -88,7 +88,7 @@ const ContextMenu = ({
         {
             title: 'Delete',
             action: () => {
-                deleteItem();
+                deleteTreeItem();
                 closeContextMenu();
             }
         }
@@ -113,23 +113,25 @@ const ContextMenu = ({
             className="folder-tree_context-menu"
             style={menuMargin}
         >
-        {
-            actions.map((action, i) => {
-                return (
-                    action &&
-                    <button
-                        onClick={action.action}
-                        className="folder-tree_context-menu-item"
-                        title={action.title}
-                        key={i}
-                    >
-                        <span>
-                            { action.title }
-                        </span>
-                    </button>
-                )
-            })
-        }
+            <div className="folder-tree_context-menu-inner">
+            {
+                actions.map((action, i) => {
+                    return (
+                        action &&
+                        <button
+                            onClick={action.action}
+                            className="folder-tree_context-menu-item"
+                            title={action.title}
+                            key={i}
+                        >
+                            <span>
+                                { action.title }
+                            </span>
+                        </button>
+                    )
+                })
+            }
+            </div>
         </div>
     )
 }

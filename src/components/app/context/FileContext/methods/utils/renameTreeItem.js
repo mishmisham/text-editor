@@ -1,5 +1,5 @@
 
-export const renameItem = (itemID, newName, contextData) => {
+export const renameTreeItem = (itemID, newName, contextData) => {
     const {
         tree,
         getTreeItemByID,

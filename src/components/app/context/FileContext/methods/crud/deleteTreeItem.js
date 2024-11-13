@@ -1,14 +1,14 @@
 
-export const deleteItem = (itemID, eachChildItemCallback = null, sourceArray, onlyUpgradeArray=false, contextData) => {
+export const deleteTreeItem = (itemID, eachChildItemCallback = null, sourceArray, onlyUpgradeArray=false, contextData) => {
     
     const {
         setTree,
         getTreeItemByID,
-        findAllFolderChildren,
+        getAllFolderChildren,
     } = contextData;
 
     let newTree = [...sourceArray];
-    const list = findAllFolderChildren(itemID, newTree);
+    const list = getAllFolderChildren(itemID, newTree);
     const { index, item } = getTreeItemByID(itemID, newTree);
     list.push({index, item});
 

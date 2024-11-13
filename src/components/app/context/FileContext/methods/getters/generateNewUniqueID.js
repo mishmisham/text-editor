@@ -1,5 +1,5 @@
 
-export const getNewID = (state, arrayToCheck) => {
+export const generateNewUniqueID = (state, arrayToCheck) => {
     const { tree } = state;
     const checkItemsIDIn = arrayToCheck && arrayToCheck.length ? arrayToCheck : tree;
 

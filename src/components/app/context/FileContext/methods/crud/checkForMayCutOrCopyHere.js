@@ -1,18 +1,18 @@
 
 
-export const checkForMayCutOrCopy = (moveTreeItem, moveTo, allowCopyHere=false, contextData) => {
+export const checkForMayCutOrCopyHere = (moveTreeItem, moveTo, allowCopyHere=false, contextData) => {
     if (!moveTreeItem || moveTreeItem.id === moveTo.id) {
         return false;
     }
 
     const {
         getClosestTreeItemFolder,
-        findAllFolderChildren
+        getAllFolderChildren
     } = contextData;
 
     const parentID = getClosestTreeItemFolder(moveTo);
     if (moveTreeItem.type === 'folder' && parentID) {
-        const itemChildren = findAllFolderChildren(moveTreeItem.id);
+        const itemChildren = getAllFolderChildren(moveTreeItem.id);
         const parentIsChild = -1 !== itemChildren.findIndex((child) => child.item.id === parentID);
         if (parentIsChild) {
             return false;

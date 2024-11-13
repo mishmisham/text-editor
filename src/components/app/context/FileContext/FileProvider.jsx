@@ -1,31 +1,7 @@
 import FileContext from './FileContext.js';
 import FileReducer from './FileReducer.js'
 import { useReducer } from "react";
-import { findAllChildren } from './utils/findAllChildren.js'
-import { findChildren } from './utils/findChildren.js'
-import { getNewID } from './utils/getNewID.js'
-import { getItemByID } from './utils/getItemByID.js'
-import { getBreadCrumbs } from './utils/getBreadCrumbs.js';
-import { getClosestFolder } from './utils/getClosestFolder.js';
-import { searchingInFiles } from './utils/searchingInFiles.js';
-import { sortFirstIsFolder } from './utils/sortFirstIsFolder.js';
-import { copyItem } from './utils/copyItem.js';
-import { searchFileByName } from './utils/searchFileByName.js';
-import { replaceTextsInFiles } from './utils/replaceTextsInFiles.js';
-import { getAllRootItems } from './utils/getAllRootItems.js';
-import { renameItem } from './utils/renameItem.js';
-import { checkForMayCutOrCopy } from './utils/checkForMayCutOrCopy.js';
-import { removeOldCopyOnPasteWithReplace } from './utils/removeOldCopyOnPasteWithReplace.js';
-import { renameIfNewNeighbourHasSimilarName } from './utils/renameIfNewNeighbourHasSimilarName.js';
-import { moveFileTo } from './utils/moveFileTo.js';
-import { getRecursiveCopyOfAllChildrens } from './utils/getRecursiveCopyOfAllChildrens.js';
-import { pasteCopy } from './utils/pasteCopy.js';
-import { deleteItem } from './utils/deleteItem.js';
-import { createAndAddNewFile } from './utils/createAndAddNewFile.js';
-import { createAndAddNewFolder } from './utils/createAndAddNewFolder.js';
-
-import { newFileTemplate } from './jsonTemplates/newFileTemplate.js';
-import { newFolderTemplate } from './jsonTemplates/newFolderTemplate.js';
+import * as FileProviderMethods from './methods'
 
 import {
     demofolders
@@ -44,92 +20,106 @@ const FileProvider = ({ children }) => {
         type: 'setTree'
     });
 
+    // create
+
+    const createNewFile = (parentFolderID, addToTree=true) => {
+        return FileProviderMethods.createNewFile(parentFolderID, addToTree, contextData);
+    }
+
+    const createNewFolder = (parentFolderID, addToTree=true) => {
+        return FileProviderMethods.createNewFolder(parentFolderID, addToTree, contextData);
+    }
+
+
+    // getters
+
     const generateNewUniqueID = (arrayToCheck=state.tree) => {
-        return getNewID(state, arrayToCheck);
-    }
-
-    const createNewFile = (parentFolderID) => {
-        return createAndAddNewFile(parentFolderID, contextData);
-    }
-
-    const createNewFolder = (parentFolderID) => {
-        return createAndAddNewFolder(parentFolderID, contextData);
-    }
-
-    const replaceTextInFiles = (fileArray, searchText, replaceValue) => {
-        replaceTextsInFiles(fileArray, searchText, replaceValue, contextData)
-    }
-
-    const findAllFolderChildren = (id, sourceArray=state.tree) => {
-        return findAllChildren(id, sourceArray);
-    }
-
-    const findFolderCurrentChildren = (id, sourceArray=state.tree) => {
-        return findChildren(id, sourceArray);
-    }
-
-    const findTreeItemsByName = (searchText) => {
-        return searchFileByName(searchText, contextData);
+        return FileProviderMethods.generateNewUniqueID(state, arrayToCheck);
     }
 
     const getAllRootTreeItems = () => {
-       return getAllRootItems(contextData);
-    }
+        return FileProviderMethods.getAllRootTreeItems(contextData);
+     }
+ 
+     const getTreeItemByID = (id, sourceArray=state.tree) => {
+         return FileProviderMethods.getTreeItemByID(id, sourceArray);
+     }
+ 
+     const getTreeItemPath = (item, sourceArray=state.tree) => {
+         return FileProviderMethods.getTreeItemPath(item, sourceArray)
+     }
+ 
+     const getClosestTreeItemFolder = (item) => {
+         return FileProviderMethods.getClosestTreeItemFolder(item)
+     }
 
-    const getTreeItemByID = (id, sourceArray=state.tree) => {
-        return getItemByID(id, sourceArray);
-    }
+     const getRecursiveCopyOfAllChildren = (oldParentID, newParentID, idCompareArray=[], list=[]) => {
+         return FileProviderMethods.getRecursiveCopyOfAllChildren(oldParentID, newParentID, idCompareArray, list, contextData);
+     }
 
-    const getTreeItemPath = (item, sourceArray=state.tree) => {
-        return getBreadCrumbs(item, sourceArray)
-    }
+     const getCopyOfItem = (item, parentID, idCompareArray=[]) => {
+         return FileProviderMethods.getCopyOfItem(item, parentID, idCompareArray, contextData);
+     }
 
-    const getClosestTreeItemFolder = (item) => {
-        return getClosestFolder(item)
-    }
+     const getAllFolderChildren = (id, sourceArray=state.tree) => {
+         return FileProviderMethods.getAllFolderChildren(id, sourceArray);
+     }
+ 
+     const getFolderCurrentChildren = (id, sourceArray=state.tree) => {
+         return FileProviderMethods.getFolderCurrentChildren(id, sourceArray);
+     }
 
-    const getCopyOfItem = (item, parentID, idCompareArray=[]) => {
-        return copyItem(item, parentID, idCompareArray, contextData);
+
+    // search
+
+    const searchTreeItemsByName = (searchText) => {
+        return FileProviderMethods.searchTreeItemsByName(searchText, contextData);
     }
 
     const searchTextInAllFiles = async (text, useBreadcrumbs=false, sourceArray=state.tree) => {
-        return await searchingInFiles(text, sourceArray, useBreadcrumbs)
+        return await FileProviderMethods.searchTextInAllFiles(text, sourceArray, useBreadcrumbs)
     }
 
+
+    // utils
+
     const sortFolderContent = (folderItems) => {
-        return sortFirstIsFolder(folderItems);
+        return FileProviderMethods.sortFolderContent(folderItems);
     }
 
     const renameTreeItem = (itemID, newName) => {
-        renameItem(itemID, newName, contextData);
+        FileProviderMethods.renameTreeItem(itemID, newName, contextData);
     }
 
-    const checkForMayCutOrCopyHere = (moveTreeItem, moveTo, allowCopyHere=false) => {
-        return checkForMayCutOrCopy(moveTreeItem, moveTo, allowCopyHere, contextData);
-    }
-
-    const removeOldCopyOnPasteReplace = (file, parentID, sourceArray=state.tree) => {
-        return removeOldCopyOnPasteWithReplace(file, parentID, sourceArray, contextData);
+    const replaceTextInFiles = (fileArray, searchText, replaceValue) => {
+        FileProviderMethods.replaceTextInFiles(fileArray, searchText, replaceValue, contextData)
     }
 
     const renameIfNewNeighboursHasSimilarName = (item, parentID, sourceArray=state.tree) => {
-        renameIfNewNeighbourHasSimilarName(item, parentID, sourceArray, contextData);
+        FileProviderMethods.renameIfNewNeighboursHasSimilarName(item, parentID, sourceArray, contextData);
     }
 
-    const moveFile = (moveTreeItem, moveTo, pasteWithReplace=false) => {
-        return moveFileTo(moveTreeItem, moveTo, pasteWithReplace, contextData);
+
+    // crud
+
+    const checkForMayCutOrCopyHereHere = (moveTreeItem, moveTo, allowCopyHere=false) => {
+        return FileProviderMethods.checkForMayCutOrCopyHere(moveTreeItem, moveTo, allowCopyHere, contextData);
     }
 
-    const getRecursiveCopyOfAllChildren = (oldParentID, newParentID, idCompareArray=[], list=[]) => {
-        return getRecursiveCopyOfAllChildrens(oldParentID, newParentID, idCompareArray, list, contextData);
+    const removeOldCopyOnPasteReplace = (file, parentID, sourceArray=state.tree) => {
+        return FileProviderMethods.removeOldCopyOnPasteReplace(file, parentID, sourceArray, contextData);
     }
 
-    const addCopyOfItem = (copyTreeItem, copyTo, pasteWithReplace=false) => {
-        return pasteCopy(copyTreeItem, copyTo, pasteWithReplace, contextData);
+    const moveTreeItemToFolder = (moveTreeItem, moveTo, pasteWithReplace=false) => {
+        return FileProviderMethods.moveTreeItemToFolder(moveTreeItem, moveTo, pasteWithReplace, contextData);
+    }
+
+    const pasteCopyOfTreeItem = (copyTreeItem, copyTo, pasteWithReplace=false) => {
+        return FileProviderMethods.pasteCopyOfTreeItem(copyTreeItem, copyTo, pasteWithReplace, contextData);
     }
 
     const deleteTreeItem = (itemID, eachChildItemCallback = null, sourceArray=state.tree, onlyUpgradeArray=false) => {
-        return deleteItem(itemID, eachChildItemCallback, sourceArray, onlyUpgradeArray, contextData);
+        return FileProviderMethods.deleteTreeItem(itemID, eachChildItemCallback, sourceArray, onlyUpgradeArray, contextData);
     }
 
     const contextData = {
@@ -141,15 +131,15 @@ const FileProvider = ({ children }) => {
         createNewFile,
         createNewFolder,
 
-        moveFile,
-        addCopyOfItem,
+        moveTreeItemToFolder,
+        pasteCopyOfTreeItem,
         getCopyOfItem,
         getRecursiveCopyOfAllChildren,
 
         removeOldCopyOnPasteReplace,
         renameIfNewNeighboursHasSimilarName,
 
-        checkForMayCutOrCopyHere,
+        checkForMayCutOrCopyHereHere,
 
         renameTreeItem,
         deleteTreeItem,
@@ -159,17 +149,15 @@ const FileProvider = ({ children }) => {
         getClosestTreeItemFolder,
         getAllRootTreeItems,
 
-        findAllFolderChildren,
-        findFolderCurrentChildren,
+        getAllFolderChildren,
+        getFolderCurrentChildren,
 
-        findTreeItemsByName,
+        searchTreeItemsByName,
         searchTextInAllFiles,
         replaceTextInFiles,
 
         sortFolderContent,
 
-        newFileTemplate,
-        newFolderTemplate,
     }
 
     return (

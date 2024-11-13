@@ -1,13 +1,13 @@
-import { getItemByID } from './getItemByID';
+import { getTreeItemByID } from './getTreeItemByID';
 
-export const getBreadCrumbs = (item, tree) => {
+export const getTreeItemPath = (item, tree) => {
     const breadCrumbs = [];
 
     const finder = (elem) => {
         if (!elem) {
             return;
         }
-        const parent = getItemByID(elem.parent, tree);
+        const parent = getTreeItemByID(elem.parent, tree);
         breadCrumbs.push(parent.item);
 
         if (parent.parent) { 

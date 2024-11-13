@@ -1,6 +1,6 @@
 
 
-export const searchFileByName = (searchText, contextData) => {
+export const searchTreeItemsByName = (searchText, contextData) => {
     if (!searchText) {
         return [];
     }

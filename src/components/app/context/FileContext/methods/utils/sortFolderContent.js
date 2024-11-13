@@ -1,6 +1,6 @@
 
 
-export const sortFirstIsFolder = (items) => {
+export const sortFolderContent = (items) => {
     const sortedByType = items.sort(item=>item.type === 'folder' ? -1 : 1);
 
     const firstFileIndex = sortedByType.findIndex(item=>item.type === 'file');

@@ -1,12 +1,12 @@
-import { getItemByID } from './getItemByID';
+import { getTreeItemByID } from './getTreeItemByID';
 
-export const findAllChildren = (id, sourceArray, list=[]) => {
+export const getAllFolderChildren = (id, sourceArray, list=[]) => {
     const children = sourceArray.filter(item=>item.parent === id);
 
     let newList = [
         ...list,
         ...children.map(item=> {
-            const { index } = getItemByID(item.id, sourceArray);
+            const { index } = getTreeItemByID(item.id, sourceArray);
             return {
                 item,
                 index
@@ -15,7 +15,7 @@ export const findAllChildren = (id, sourceArray, list=[]) => {
     ];
 
     children.forEach(item => {
-        newList = findAllChildren(item.id, sourceArray, newList);
+        newList = getAllFolderChildren(item.id, sourceArray, newList);
     })
 
     return newList;

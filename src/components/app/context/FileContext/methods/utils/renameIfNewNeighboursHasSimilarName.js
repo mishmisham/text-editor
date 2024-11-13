@@ -1,12 +1,12 @@
 
 
-export const renameIfNewNeighbourHasSimilarName = (item, parentID, sourceArray, contextData) => {
+export const renameIfNewNeighboursHasSimilarName = (item, parentID, sourceArray, contextData) => {
     
     const {
-        findFolderCurrentChildren
+        getFolderCurrentChildren
     } = contextData;
     
-    const newParentChildrens = findFolderCurrentChildren(parentID, sourceArray);
+    const newParentChildrens = getFolderCurrentChildren(parentID, sourceArray);
     if (!newParentChildrens) {
         return;
     }
