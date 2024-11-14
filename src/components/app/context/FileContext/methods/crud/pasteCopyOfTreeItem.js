@@ -5,20 +5,21 @@ export const pasteCopyOfTreeItem = (copyTreeItem, copyTo, pasteWithReplace=false
         tree,
         setTree,
         getCopyOfItem,
-        checkForMayCutOrCopyHereHere,
+        checkForMayCutOrCopyHere,
         getRecursiveCopyOfAllChildren,
         removeOldCopyOnPasteReplace,
         renameIfNewNeighboursHasSimilarName,
     } = contextData;
 
-    if (!checkForMayCutOrCopyHereHere(copyTreeItem, copyTo, true)) {
+    if (!checkForMayCutOrCopyHere(copyTreeItem, copyTo, true)) {
         return false;
     }
     
-    let newTree = [...tree];
+    let newTree = [...JSON.parse(JSON.stringify(tree))];
+
+    const newItem = getCopyOfItem(copyTreeItem, copyTo.id);
 
     try {
-        const newItem = getCopyOfItem(copyTreeItem, copyTo.id);
         newTree.push(newItem);
 
         if (copyTreeItem.type === 'folder') {
@@ -28,6 +29,7 @@ export const pasteCopyOfTreeItem = (copyTreeItem, copyTo, pasteWithReplace=false
                 ...newItemCopyList
             ];
         }
+
 
         if (pasteWithReplace) {
             newTree = removeOldCopyOnPasteReplace(newItem, copyTo.id, newTree);
@@ -42,5 +44,5 @@ export const pasteCopyOfTreeItem = (copyTreeItem, copyTo, pasteWithReplace=false
         console.log(err)
     }
     
-    return true;
+    return newItem;
 }

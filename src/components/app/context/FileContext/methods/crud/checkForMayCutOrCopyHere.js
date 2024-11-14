@@ -1,6 +1,6 @@
 
 
-export const checkForMayCutOrCopyHere = (moveTreeItem, moveTo, allowCopyHere=false, contextData) => {
+export const checkForMayCutOrCopyHere = (moveTreeItem, moveTo, allowCopyHere=true, contextData) => {
     if (!moveTreeItem || moveTreeItem.id === moveTo.id) {
         return false;
     }

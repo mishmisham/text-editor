@@ -1,7 +1,8 @@
 import React, { useMemo, useRef, useContext, useEffect } from "react";
 import './TreeComponent.sass';
 import TreeItemComponent from './components/TreeItemComponent/TreeItemComponent';
-import ConfirmDeleteItemModal from './components/ConfirmDeleteItemModal/ConfirmDeleteItemModal.jsx';
+import ConfirmModal from './components/ConfirmModal/ConfirmModal.jsx';
+import DraggingTreeItemMouseGhost from './components/DraggingTreeItemMouseGhost/DraggingTreeItemMouseGhost.jsx';
 
 import FileContext from '@/components/app/context/FileContext/FileContext.js';
 import FolderTreeContext from '../../context/FolderTreeContext.js';
@@ -11,31 +12,28 @@ import useMouseOverFolderOpen from './hooks/useMouseOverFolderOpen.js'
 const TreeComponent = () => {
 
     const {
-        moveTreeItemToFolder,
         searchTreeItemsByName,
         getAllRootTreeItems,
     } = useContext(FileContext);
 
     const {
         search,
-        renameID,
         mouseDownItem,
-        mouseMoveAbsoluteCoordinates,
         resetMouseSelectionsFolderTree,
-        setMouseMoveAbsoluteCoordinates,
         setContentRef,
-        setConfirmDeleteModal,
+        setConfirmModal,
+        refreshMouseAbsolutePosition,
+        pasteFolderItem
     } = useContext(FolderTreeContext);
 
 
     const contentRef = useRef(null);
-    const confirmDeleteModal = useRef(null);
+    const confirmModal = useRef(null);
    
     useEffect(() => {
         setContentRef(contentRef)
-        setConfirmDeleteModal(confirmDeleteModal)
-    }, [contentRef, setConfirmDeleteModal, setContentRef]);
-
+        setConfirmModal(confirmModal)
+    }, [contentRef, setConfirmModal, setContentRef]);
 
     const rootItems = useMemo(() => {
         return getAllRootTreeItems();
@@ -47,27 +45,17 @@ const TreeComponent = () => {
 
     const itemList = search ? foundItems : rootItems;
 
-    const onDrop = (e) => {
+    const onDrop = async (e) => {
         if (e.target.classList.contains('.folder-tree-item') || e.target.closest('.folder-tree-item')) {
             resetMouseSelectionsFolderTree();
             return;
         }
 
-        moveTreeItemToFolder(mouseDownItem, {type:'root'});
-        resetMouseSelectionsFolderTree();
+        pasteFolderItem(mouseDownItem, {type:'root'});
     }
 
     const onMouseMove = (e) => {
-        if (!mouseDownItem || !contentRef.current || renameID) {
-            return;
-        }
-
-        const { left, top } = contentRef.current.getBoundingClientRect();
-        
-        setMouseMoveAbsoluteCoordinates({
-            left: e.clientX - left,
-            top: e.clientY - top,
-        })
+        refreshMouseAbsolutePosition(e);
     }
     
     useMouseOverFolderOpen();
@@ -94,17 +82,9 @@ const TreeComponent = () => {
                 })
             }
             </div>
-            {
-                mouseDownItem && mouseMoveAbsoluteCoordinates &&
-                <div
-                    className="folder-tree_content_drag-n-drop-tooltip"
-                    style={{ ...mouseMoveAbsoluteCoordinates }}
-                >
-                    { mouseDownItem.name }
-                </div>
-            }
-            <ConfirmDeleteItemModal
-                ref={confirmDeleteModal}
+            <DraggingTreeItemMouseGhost />
+            <ConfirmModal
+                ref={confirmModal}
             />
         </div>
     )

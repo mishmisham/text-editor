@@ -1,28 +1,71 @@
 import FolderTreeContext from './FolderTreeContext.js';
+import FolderTreeReducer from './FolderTreeReducer.js';
 import * as FolderTreeProviderMethods from './methods';
 import * as contextControllers from './contextControllers';
 
 import FileContext from '@/components/app/context/FileContext/FileContext.js';
+import ViewContext from '@/components/app/context/ViewContext/ViewContext.js';
 
-import { useContext, useState } from "react";
+import { useContext, useState, useReducer } from "react";
 
 const FolderTreeProvider = ({ children }) => {
    
     // обертка дерева файлов
     const [contentRef, setContentRef] = useState(null);
     // модалка удаления файла
-    const [confirmDeleteModal, setConfirmDeleteModal] = useState(null);
+    const [confirmModal, setConfirmModal] = useState(null);
 
-    const [search, setSearch] = useState('');
-    const [renameID, setRenameID] = useState(null);
-    const [currentSelected, setCurrentSelected] = useState(null);
-    const [openFolders, setOpenFolders] = useState([]);
-    const [cutOrCopyItem, setCutOrCopyItem] = useState(null);
-    const [mouseDownItem, setMouseDownItem] = useState(null);
-    const [mouseOverItem, setMouseOverItem] = useState(null);
-    const [mouseContextMenuItem, setContextMenuItem] = useState(null);
-    const [mouseMoveAbsoluteCoordinates, setMouseMoveAbsoluteCoordinates] = useState(null);
+    const [state, dispatch] = useReducer(FolderTreeReducer, {
+        search: '',
+        renameID: null,
+        currentSelected: null,
+        openFolders: [],
+        cutOrCopyItem: null,
+        contentRef: null,
+        confirmDeleteModal: null,
+        mouseContextMenuItem: null,
+        mouseDownItem: null,
+        mouseOverItem: null,
+        mouseMoveAbsoluteCoordinates: null,
+    });
 
+    const setSearch = (value) => dispatch({
+        payload: value,
+        type: 'setSearch'
+    });
+    const setRenameID = (value) => dispatch({
+        payload: value,
+        type: 'setRenameID'
+    });
+    const setCurrentSelected = (value) => dispatch({
+        payload: value,
+        type: 'setCurrentSelected'
+    });
+    const setOpenFolders = (value) => dispatch({
+        payload: value,
+        type: 'setOpenFolders'
+    });
+    const setCutOrCopyItem = (value) => dispatch({
+        payload: value,
+        type: 'setCutOrCopyItem'
+    });
+    const setMouseDownItem = (value) => dispatch({
+        payload: value,
+        type: 'setMouseDownItem'
+    });
+    const setMouseOverItem = (value) => dispatch({
+        payload: value,
+        type: 'setMouseOverItem'
+    });
+    const setContextMenuItem = (value) => dispatch({
+        payload: value,
+        type: 'setContextMenuItem'
+    });
+    const setMouseMoveAbsoluteCoordinates = (value) => dispatch({
+        payload: value,
+        type: 'setMouseMoveAbsoluteCoordinates'
+    });
+    
 
     // mouse
 
@@ -34,6 +77,9 @@ const FolderTreeProvider = ({ children }) => {
     };
     const checkIfNeedOpenHoveredFolder = (itemID) => {
         return FolderTreeProviderMethods.checkIfNeedOpenHoveredFolder(itemID, contextData);
+    }
+    const refreshMouseAbsolutePosition = (e) => {
+        FolderTreeProviderMethods.refreshMouseAbsolutePosition(e, contextData);
     }
 
 
@@ -77,26 +123,31 @@ const FolderTreeProvider = ({ children }) => {
     const createFolder = (parentFolderID=null) => {
         return contextControllers.createFolder(parentFolderID, contextData);
     }
-    const pasteFolderItem = (addItem, targetFolder, replaceMode=false, resetSelectedIfCut=false) => {
-        return contextControllers.pasteFolderItem(addItem, targetFolder, replaceMode, resetSelectedIfCut, contextData);
+    const pasteFolderItem = async (addItem, targetFolder, resetSelectedIfCut=true) => {
+        return await contextControllers.pasteFolderItem(addItem, targetFolder, resetSelectedIfCut, contextData);
+    }
+    const deleteFolderItem = (item) => {
+        contextControllers.deleteFolderItem(item, contextData);
     }
 
     const contextData = {
-        search,
-        renameID,
-        currentSelected,
-        openFolders,
-        cutOrCopyItem,
+        // search,
+        // renameID,
+        // currentSelected,
+        // openFolders,
+        // cutOrCopyItem,
 
-        mouseDownItem,
-        mouseOverItem,
-        mouseContextMenuItem,
-        mouseMoveAbsoluteCoordinates,
+        // mouseDownItem,
+        // mouseOverItem,
+        // mouseContextMenuItem,
+        // mouseMoveAbsoluteCoordinates,
+        ...state,
 
         contentRef, setContentRef,
-        confirmDeleteModal, setConfirmDeleteModal,
+        confirmModal, setConfirmModal,
 
         fileContext: useContext(FileContext),
+        viewContext: useContext(ViewContext),
 
         // current context
         setSearch,
@@ -108,6 +159,7 @@ const FolderTreeProvider = ({ children }) => {
         setMouseDownItem,
         setMouseOverItem,
         setMouseMoveAbsoluteCoordinates,
+        refreshMouseAbsolutePosition,
         isDropFileTarget,
         resetMouseSelectionsFolderTree,
         checkIfNeedOpenHoveredFolder,
@@ -124,6 +176,7 @@ const FolderTreeProvider = ({ children }) => {
         createFile,
         createFolder,
         pasteFolderItem,
+        deleteFolderItem,
     }
 
     return (

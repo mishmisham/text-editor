@@ -1,13 +1,14 @@
-import React, { useMemo, useContext, useRef } from "react";
+import React, { useMemo, useContext } from "react";
 import './TreeItemComponent.sass';
 import ContextMenu from './components/ContextMenu/ContextMenu';
 import ItemDefaultMainContent from './components/ItemDefaultMainContent/ItemDefaultMainContent';
 import ItemRenameMainContent from './components/ItemRenameMainContent/ItemRenameMainContent';
-import useDebounced from '@/hooks/useDebounced';
 
 import FileContext from '@/components/app/context/FileContext/FileContext.js';
 import ViewContext from '@/components/app/context/ViewContext/ViewContext.js';
 import FolderTreeContext from '../../../../context/FolderTreeContext.js';
+
+import DragNDropWrapperComponent from './components/DragNDropWrapperComponent/DragNDropWrapperComponent.jsx';
 
 const TreeItemComponent = ({
     item,
@@ -17,7 +18,6 @@ const TreeItemComponent = ({
 
     const {
         getFolderCurrentChildren,
-        moveTreeItemToFolder,
     } = useContext(FileContext);
 
     const {
@@ -29,18 +29,12 @@ const TreeItemComponent = ({
         openFolders,
         currentSelected,
         setCurrentSelected,
-
-        mouseDownItem,
-        setMouseDownItem,
-        mouseOverItem,
-        setMouseOverItem,
+        
         mouseContextMenuItem,
         setContextMenuItem,
-        resetMouseSelectionsFolderTree,
 
         isOpenFolder,
-        openFolder,
-
+       
         isDropFileTarget,
     } = useContext(FolderTreeContext);
     
@@ -48,43 +42,6 @@ const TreeItemComponent = ({
     const isOpen = useMemo(()=>isFolder ? isOpenFolder(item.id, openFolders) : isOpenFile(item), [isFolder, isOpenFile, isOpenFolder, item, openFolders]);
     const children = useMemo(()=>isFolder && isOpen ? getFolderCurrentChildren(item.id) : null, [getFolderCurrentChildren, isFolder, isOpen, item.id]);
     const itemIcon = useMemo(()=>isFolder ? (isOpen ? '📂' : '📁') : '📒', [isFolder, isOpen]);
-
-    const itemStyles = {
-        paddingLeft: 32 + leftPadding + 'px',
-    }
-
-    const onMouseUp = (e) => {
-        setCurrentSelected(item.id);
-        const moveDone = moveTreeItemToFolder(mouseDownItem, item);
-        if (moveDone) {
-            resetMouseSelectionsFolderTree();
-        }
-    }
-
-    const onMouseDown = (e) => {
-        if (mouseDownItem?.id === item.id || currentSelected !== item.id) {
-            return;
-        }
-        setMouseDownItem(item);
-    }
-
-    const refreshMouseOver = useDebounced(() => {
-        setMouseOverItem({
-            ...item,
-            openFolder: e=>openFolder(item.id)
-        });
-    }, 30);
-
-    const onMouseOver = (e) => {
-        if (!mouseDownItem?.id || mouseOverItem?.id === item.id) {
-            return;
-        }
-        refreshMouseOver();
-    }
-
-    const onMouseLeave = () => {
-        setMouseOverItem(null);
-    }
 
     const onContextMenu = (e) => {
         e.preventDefault();
@@ -101,21 +58,17 @@ const TreeItemComponent = ({
     }
 
     return (
-        <>
         <div className={itemClassName}>
-            <div
-                onMouseUp={onMouseUp}
-                onTouchEnd={onMouseUp}
-                onMouseDown={onMouseDown}
-                onTouchStart={onMouseDown}
-                onMouseOver={onMouseOver}
-                onTouchMoveCapture={onMouseOver}
-                onMouseLeave={onMouseLeave}
-                onContextMenu={onContextMenu}
-                className="folder-tree-item_item"
-                style={itemStyles}
+            <DragNDropWrapperComponent
+                item={item}
+                leftPadding={leftPadding}
+                wrapperClass="folder-tree-item_item"
             >
-                <div className="folder-tree-item_item-inner">
+                <div
+                    onContextMenu={onContextMenu}
+                    className="folder-tree-item_item-inner"
+                >
+
                 { renameID !== item.id &&
                     <ItemDefaultMainContent
                         item={item}
@@ -124,6 +77,7 @@ const TreeItemComponent = ({
                         isOpen={isOpen}
                     />
                 }
+
                 { renameID === item.id && 
                     <ItemRenameMainContent
                         item={item}
@@ -131,7 +85,8 @@ const TreeItemComponent = ({
                     />
                 }
                 </div>
-            </div>
+            </DragNDropWrapperComponent>
+
             {
                 mouseContextMenuItem && mouseContextMenuItem.id === item.id &&
                 <ContextMenu
@@ -139,6 +94,7 @@ const TreeItemComponent = ({
                     leftPadding={leftPadding}
                 />
             }
+
             {  children && isOpen &&
                 <div className="folder-tree-item_children">
                 {
@@ -156,7 +112,6 @@ const TreeItemComponent = ({
                 </div>
             }
         </div>
-        </>
     )
 }
 

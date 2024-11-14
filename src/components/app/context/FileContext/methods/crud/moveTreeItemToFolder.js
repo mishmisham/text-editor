@@ -4,17 +4,17 @@ export const moveTreeItemToFolder = (moveTreeItem, moveTo, pasteWithReplace, con
     const {
         tree,
         setTree,
-        checkForMayCutOrCopyHereHere,
+        checkForMayCutOrCopyHere,
         getClosestTreeItemFolder,
         removeOldCopyOnPasteReplace,
         renameIfNewNeighboursHasSimilarName,
     } = contextData;
 
-    if (!checkForMayCutOrCopyHereHere(moveTreeItem, moveTo)) {
+    if (!checkForMayCutOrCopyHere(moveTreeItem, moveTo)) {
         return false;
     }
 
-    let newTree = [...tree];
+    let newTree = [...JSON.parse(JSON.stringify(tree))];
     const parentID = getClosestTreeItemFolder(moveTo);
     try {
         const index = tree.findIndex(item=>item.id === moveTreeItem.id);
@@ -28,9 +28,9 @@ export const moveTreeItemToFolder = (moveTreeItem, moveTo, pasteWithReplace, con
         newTree[index].parent = parentID;
         setTree(newTree);
     } catch(err) {
-        console.error('moveFileTo', newTree, parentID);
+        console.error('moveFileTo', newTree, tree, parentID);
         console.error(err);
     }
     
-    return true;
+    return moveTreeItem;
 }

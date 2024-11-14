@@ -8,30 +8,31 @@ import FolderTreeContext from '../../../../../../context/FolderTreeContext.js';
 const ContextMenu = ({
     item,
     leftPadding,
-    deleteTreeItem,
 }) => {
 
     const {
-        checkForMayCutOrCopyHereHere
+        checkForMayCutOrCopyHere
     } = useContext(FileContext);
 
     const {
         cutOrCopyItem,
+        mouseDownItem,
+        mouseOverItem,
         startRenameItem,
         setCutOrCopyItem,
         setContextMenuItem,
-        confirmDeleteModal,
 
         // folder context usage
         createFile,
         createFolder,
         pasteFolderItem,
+        deleteFolderItem,
     } = useContext(FolderTreeContext);
 
     const isFolder = item.type === 'folder';
     const mayPaste = useMemo(() => {
-        return isFolder && cutOrCopyItem && checkForMayCutOrCopyHereHere(cutOrCopyItem, item, cutOrCopyItem.mode === 'copy');
-    }, [checkForMayCutOrCopyHereHere, cutOrCopyItem, isFolder, item]);
+        return isFolder && !mouseOverItem && cutOrCopyItem && checkForMayCutOrCopyHere(cutOrCopyItem, item);
+    }, [isFolder, mouseDownItem, mouseOverItem, cutOrCopyItem]);
 
     const actions = [
 
@@ -53,11 +54,7 @@ const ContextMenu = ({
         },
         mayPaste && {
             title: 'Paste',
-            action: () => pasteFolderItem(cutOrCopyItem.item, item, false, true)
-        },
-        mayPaste && {
-            title: 'Paste & replace',
-            action: () => pasteFolderItem(cutOrCopyItem.item, item, true, true)
+            action: () => pasteFolderItem(cutOrCopyItem.item, item)
         },
         {
             title: 'Rename',
@@ -65,7 +62,7 @@ const ContextMenu = ({
         },
         {
             title: 'Delete',
-            action: () => confirmDeleteModal?.current?.openModal(item)
+            action: () => deleteFolderItem(item)
         }
     ];
 

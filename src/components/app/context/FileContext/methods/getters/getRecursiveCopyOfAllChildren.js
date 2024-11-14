@@ -18,7 +18,7 @@ export const getRecursiveCopyOfAllChildren = (oldParentID, newParentID, idCompar
             list.push(childCopyItem)
             idCompareArray.push(childCopyItem);
             if (childCopyItem.type === 'folder') {
-                getRecursiveCopyOfAllChildren(child.id, childCopyItem.id, idCompareArray=[], list, contextData);
+                getRecursiveCopyOfAllChildren(child.id, childCopyItem.id, idCompareArray, list, contextData);
             }
         });
     } catch(err) {

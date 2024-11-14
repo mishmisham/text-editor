@@ -7,7 +7,7 @@ export const deleteTreeItem = (itemID, eachChildItemCallback = null, sourceArray
         getAllFolderChildren,
     } = contextData;
 
-    let newTree = [...sourceArray];
+    let newTree = [...JSON.parse(JSON.stringify(sourceArray))];
     const list = getAllFolderChildren(itemID, newTree);
     const { index, item } = getTreeItemByID(itemID, newTree);
     list.push({index, item});
@@ -17,7 +17,7 @@ export const deleteTreeItem = (itemID, eachChildItemCallback = null, sourceArray
             eachChildItemCallback(child);
         }
 
-        newTree = newTree.filter(file=>file.id !== child.item.id);
+        newTree = [...newTree].filter(file=>file.id !== child.item.id);
     });
 
     if (!onlyUpgradeArray) {

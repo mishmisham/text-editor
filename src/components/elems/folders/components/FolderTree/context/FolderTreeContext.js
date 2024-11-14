@@ -14,6 +14,7 @@ export default createContext({
     mouseMoveAbsoluteCoordinates: null,
 
     fileContext: {},
+    viewContext: {},
 
     // current context
     setSearch: ()=>{},
@@ -41,4 +42,5 @@ export default createContext({
     createFile: ()=>{},
     createFolder: ()=>{},
     pasteFolderItem: ()=>{},
+    deleteFolderItem: ()=>{},
 });

@@ -102,7 +102,7 @@ const FileProvider = ({ children }) => {
 
     // crud
 
-    const checkForMayCutOrCopyHereHere = (moveTreeItem, moveTo, allowCopyHere=false) => {
+    const checkForMayCutOrCopyHere = (moveTreeItem, moveTo, allowCopyHere=true) => {
         return FileProviderMethods.checkForMayCutOrCopyHere(moveTreeItem, moveTo, allowCopyHere, contextData);
     }
 
@@ -139,7 +139,7 @@ const FileProvider = ({ children }) => {
         removeOldCopyOnPasteReplace,
         renameIfNewNeighboursHasSimilarName,
 
-        checkForMayCutOrCopyHereHere,
+        checkForMayCutOrCopyHere,
 
         renameTreeItem,
         deleteTreeItem,

@@ -21,7 +21,5 @@ export const textAnalyser = (text, highlightSettings, userHighlights) => {
         textAsArray
     };
 
-    // console.log(result)
-    
     return result;
 }

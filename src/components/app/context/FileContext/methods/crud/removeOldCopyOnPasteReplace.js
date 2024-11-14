@@ -16,6 +16,7 @@ export const removeOldCopyOnPasteReplace = (file, parentID, sourceArray, context
         if (similarNameItem) {
             return deleteTreeItem(similarNameItem.id, null, sourceArray, true);
         }
+        return sourceArray;
     } catch(err) {
         console.log('removeOldCopyOnPasteReplace', newParentChildrens)
         console.log(err)

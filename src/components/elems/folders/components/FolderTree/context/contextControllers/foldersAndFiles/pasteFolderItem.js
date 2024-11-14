@@ -1,26 +1,51 @@
 
 
-export const pasteFolderItem = (addItem, targetFolder, replaceMode=false, resetSelectedIfCut=false, contextData) => {
+export const pasteFolderItem = async (addItem, targetFolder, resetSelectedIfCut=true, contextData) => {
     const {
         cutOrCopyItem,
         fileContext,
         setCutOrCopyItem,
+        confirmModal,
+        resetMouseSelectionsFolderTree,
+        openSelectedFolderIfNot,
+        setCurrentSelected,
     } = contextData;
 
     const {
         moveTreeItemToFolder,
-        pasteCopyOfTreeItem
+        pasteCopyOfTreeItem,
+        checkForMayCutOrCopyHere
     } = fileContext;
 
-    if (cutOrCopyItem.mode === 'copy') {
-        pasteCopyOfTreeItem(addItem, targetFolder, replaceMode);
+    if (!checkForMayCutOrCopyHere(addItem, targetFolder)) {
+        return false;
     }
 
-    if (cutOrCopyItem.mode === 'cut') {
-        moveTreeItemToFolder(addItem, targetFolder, replaceMode);
-    }
-    
-    if (resetSelectedIfCut && cutOrCopyItem.mode === 'cut') {
-        setCutOrCopyItem(null);
-    }
+    return new Promise(async(resolve) =>{
+        let result = false;
+        const { userResponse } = await confirmModal?.current?.openModal({
+            text: `Заменять одноименные файлы?`,
+        });
+
+        if (cutOrCopyItem?.mode === 'copy') {
+            result = pasteCopyOfTreeItem(addItem, targetFolder, userResponse);
+        }
+
+        if (cutOrCopyItem?.mode === 'cut') {
+            result = moveTreeItemToFolder(addItem, targetFolder, userResponse);
+        }
+        
+        openSelectedFolderIfNot(targetFolder.id);
+
+        if (resetSelectedIfCut) {
+            setCutOrCopyItem(null);
+        }
+
+        if (result) {
+            resetMouseSelectionsFolderTree();
+            setCurrentSelected(result.id);
+        }
+
+        resolve(result);
+    })
 }
