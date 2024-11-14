@@ -12,9 +12,11 @@ export const pasteFolderItem = async (addItem, targetFolder, resetSelectedIfCut=
     } = contextData;
 
     const {
+        tree,
         moveTreeItemToFolder,
         pasteCopyOfTreeItem,
-        checkForMayCutOrCopyHere
+        checkForMayCutOrCopyHere,
+        getFolderCurrentChildren
     } = fileContext;
 
     if (!checkForMayCutOrCopyHere(addItem, targetFolder)) {
@@ -23,16 +25,26 @@ export const pasteFolderItem = async (addItem, targetFolder, resetSelectedIfCut=
 
     return new Promise(async(resolve) =>{
         let result = false;
-        const { userResponse } = await confirmModal?.current?.openModal({
-            text: `Заменять одноименные файлы?`,
-        });
+
+        const targetFolderChildren = getFolderCurrentChildren(targetFolder.id, tree);
+        const similarName = targetFolderChildren.find(item => item.name === addItem.name);
+
+        let replaceFiles = false;
+
+        if (similarName) {
+            const { userResponse } = await confirmModal?.current?.openModal({
+                text: `Заменять одноименные файлы?`,
+            });
+
+            replaceFiles = userResponse;
+        }
 
         if (cutOrCopyItem?.mode === 'copy') {
-            result = pasteCopyOfTreeItem(addItem, targetFolder, userResponse);
+            result = pasteCopyOfTreeItem(addItem, targetFolder, replaceFiles);
         }
 
         if (cutOrCopyItem?.mode === 'cut') {
-            result = moveTreeItemToFolder(addItem, targetFolder, userResponse);
+            result = moveTreeItemToFolder(addItem, targetFolder, replaceFiles);
         }
         
         openSelectedFolderIfNot(targetFolder.id);

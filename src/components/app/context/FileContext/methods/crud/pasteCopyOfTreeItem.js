@@ -30,7 +30,6 @@ export const pasteCopyOfTreeItem = (copyTreeItem, copyTo, pasteWithReplace=false
             ];
         }
 
-
         if (pasteWithReplace) {
             newTree = removeOldCopyOnPasteReplace(newItem, copyTo.id, newTree);
         } else {

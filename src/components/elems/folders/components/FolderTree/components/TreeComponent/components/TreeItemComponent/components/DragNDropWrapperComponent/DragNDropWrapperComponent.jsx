@@ -23,11 +23,14 @@ const DragNDropWrapperComponent = ({
     } = useContext(FolderTreeContext);
     
     const refreshMouseOver = useDebounced(() => {
-        if (!mouseDownItem?.id || mouseOverItem?.id === item.id) {
+        const hoverIsAlreadyRegistered = mouseOverItem?.id === item.id;
+        if (!mouseDownItem?.id || hoverIsAlreadyRegistered) {
             return;
         }
 
-        if (mouseDownItem && mouseDownItem?.id !== item.id && (!cutOrCopyItem || cutOrCopyItem?.id !== mouseDownItem?.id)) {
+        const currentHoverIsNotDraggingNow = mouseDownItem && mouseDownItem?.id !== item.id;
+        const draggingItemIsNotAlreadyRegistered = (!cutOrCopyItem || cutOrCopyItem?.id !== mouseDownItem?.id);
+        if (currentHoverIsNotDraggingNow && draggingItemIsNotAlreadyRegistered) {
             setCutOrCopyItem({
                 mode: 'cut',
                 item: mouseDownItem
@@ -52,11 +55,13 @@ const DragNDropWrapperComponent = ({
     }
 
     const onMouseUp = async (e) => {
-        if (mouseDownItem && mouseDownItem.id === item.id) {
+        const itWasJustClick = mouseDownItem && mouseDownItem.id === item.id;
+        if (itWasJustClick) {
             setMouseDownItem(null);
         }
-
-        if (cutOrCopyItem && cutOrCopyItem?.id === item.id) {
+        
+        const draggableWasRegisteredButItWasClick = cutOrCopyItem && cutOrCopyItem?.id === item.id;
+        if (draggableWasRegisteredButItWasClick) {
             setCutOrCopyItem(null);
         }
 
