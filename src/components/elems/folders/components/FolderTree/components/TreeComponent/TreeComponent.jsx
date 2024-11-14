@@ -26,7 +26,6 @@ const TreeComponent = () => {
         pasteFolderItem
     } = useContext(FolderTreeContext);
 
-
     const contentRef = useRef(null);
     const confirmModal = useRef(null);
    
@@ -70,13 +69,15 @@ const TreeComponent = () => {
         >
             <div className="folder-tree_content_inner">
             {
-                itemList.map(item => {
+                itemList.map((item, i) => {
                     return (
                         <TreeItemComponent
                             leftPadding={0}
                             level={0}
                             item={item}
                             key={item.id}
+                            // for one context menu when search similar open paths
+                            iterationKey={i}
                         />
                     )
                 })

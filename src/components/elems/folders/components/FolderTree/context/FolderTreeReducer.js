@@ -48,6 +48,17 @@ export default function FolderTreeReducer(state, action) {
                 ...state,
                 mouseMoveAbsoluteCoordinates: action.payload
             };
+        case 'setSelectedToGroupActionsItems':
+            return {
+                ...state,
+                selectedToGroupActionsItems: action.payload
+            };
+        case 'setExcludedFromGroupActionsItems':
+            return {
+                ...state,
+                excludedFromGroupActionsItems: action.payload
+            };
+    
 
         default:
           throw new Error();

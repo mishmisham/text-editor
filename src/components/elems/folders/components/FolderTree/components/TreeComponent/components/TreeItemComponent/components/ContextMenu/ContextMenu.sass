@@ -12,8 +12,9 @@
         position: absolute
         width: auto
         background: #1c1c1c
-        box-shadow: 0px 4px 8px rgba(0,0,0,.25)
+        box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15)
         border-radius: 4px
+        border: 1px solid #232323
 
     &-item
         @include flexbox(column, center, center)
@@ -26,8 +27,9 @@
         background: none
         cursor: pointer
         font-size: $defaultTextSize
-        border: 1px solid rgba(92, 85, 85, 0.5)
+        border: 1px solid rgba(92, 85, 85, 0.35)
         border-radius: 4px
+        box-shadow: 0px 0px 3px rgba(0,0,0,.15)
 
         &:last-of-type
             margin-right: 0
@@ -39,7 +41,8 @@
                 
         span
             @include flexbox(row, center, center)
-            min-width: 36px
+            min-width: 32px
+            height: 16px
             font-weight: 600
             font-size: $microTextSize
             white-space: nowrap

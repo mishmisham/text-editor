@@ -51,12 +51,12 @@ const ItemRenameMainContent = ({
     const actions = [
         {
             title: 'Отмена',
-            label: '✕',
+            label: 'x',
             action: () => cancelRename()
         },
         {
             title: 'Переименовать',
-            label: '✔',
+            label: '✓',
             action: () => saveRename()
         },
     ];

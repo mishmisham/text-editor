@@ -21,6 +21,7 @@ const ContextMenu = ({
         startRenameItem,
         setCutOrCopyItem,
         setContextMenuItem,
+        selectedToGroupActionsItems,
 
         // folder context usage
         createFile,
@@ -30,17 +31,20 @@ const ContextMenu = ({
     } = useContext(FolderTreeContext);
 
     const isFolder = item.type === 'folder';
+    const oneSelectedMode = !selectedToGroupActionsItems.length;
+
     const mayPaste = useMemo(() => {
         return isFolder && !mouseOverItem && cutOrCopyItem && checkForMayCutOrCopyHere(cutOrCopyItem, item);
     }, [isFolder, mouseDownItem, mouseOverItem, cutOrCopyItem]);
+   
 
     const actions = [
 
-        isFolder && {
+        isFolder && oneSelectedMode && {
             title: '+ File',
             action: () => createFile(item.id)
         },
-        isFolder && {
+        isFolder && oneSelectedMode && {
             title: '+ Folder',
             action: () => createFolder(item.id)
         },
@@ -52,11 +56,11 @@ const ContextMenu = ({
             title: 'Cut',
             action: () => setCutOrCopyItem({ mode: 'cut', item })
         },
-        mayPaste && {
+        mayPaste && oneSelectedMode && {
             title: 'Paste',
             action: () => pasteFolderItem(cutOrCopyItem.item, item)
         },
-        {
+        oneSelectedMode && {
             title: 'Rename',
             action: () => startRenameItem(item.id)
         },

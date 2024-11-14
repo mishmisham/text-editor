@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 
 import ViewContext from '@/components/app/context/ViewContext/ViewContext.js';
 import FolderTreeContext from '../../../../../../context/FolderTreeContext.js';
@@ -8,6 +8,11 @@ const ItemDefaultMainContent = ({
     itemIcon,
     isFolder,
     isOpen,
+    iterationKey,
+    itemIsSelectedToGroup,
+    itemIsExcludedFromGroup,
+    parentIsSelectedToGroup,
+    parentIsExcludedFromGroup,
 }) => {
 
     const {
@@ -17,8 +22,11 @@ const ItemDefaultMainContent = ({
     const {
         openFolder,
         closeFolder,
-        setContextMenuItem,
         setCurrentSelected,
+
+        openContextMenu,
+        toggleToGroupActionsItemSelection,
+        toggleExcludeFromGroupActions,
     } = useContext(FolderTreeContext);
     
     const toggleItem = () => {
@@ -31,20 +39,56 @@ const ItemDefaultMainContent = ({
         setCurrentSelected(item.id);
     }
 
-    const openContextMenu = () => {
+    const toggleContextMenu = () => {
         setTimeout(() => {
-            setContextMenuItem(item);
+            openContextMenu({
+                ...item,
+                iterationKey,
+                parentIsSelectedToGroup
+            });
         })
     }
 
+    let selectionButtonClassName = '';
+    if (itemIsSelectedToGroup) {
+        selectionButtonClassName = 'folder-tree-item_item-actions-item--selected';
+    }
+
+    if (parentIsSelectedToGroup) {
+        selectionButtonClassName = 'folder-tree-item_item-actions-item--selected-parent';
+    } 
+    
+    if (itemIsExcludedFromGroup || parentIsExcludedFromGroup) {
+        selectionButtonClassName = 'folder-tree-item_item-actions-item--selected-excluded';
+    } 
+
+    const toggleToSelection = () => {
+        if (parentIsExcludedFromGroup) {
+            return;
+        }
+        
+        if (parentIsSelectedToGroup) {
+            toggleExcludeFromGroupActions(item);
+        } else {
+            toggleToGroupActionsItemSelection(item);
+        }
+    }
     return (
         ( <>
             <div className="folder-tree-item_item-actions">
                 <button
-                    onClick={openContextMenu}
+                    onClick={toggleToSelection}
+                    title="Выбрать"
+                    style={{fontSize: '4.5px', marginTop:'3.5px', paddingLeft: '2px'}}
+                    className={selectionButtonClassName}
+                >
+                    ●
+                </button>
+                <button
+                    onClick={toggleContextMenu}
                     title="Меню"
                 >
-                   ☰
+                   ⌘
                 </button>
             </div>
 

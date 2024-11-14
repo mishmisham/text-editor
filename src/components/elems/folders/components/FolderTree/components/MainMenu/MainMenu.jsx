@@ -1,8 +1,9 @@
 
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 import InputText from '@/components/primitive/inputs/InputText/InputText';
 import './MainMenu.sass';
 
+import FileContext from '@/components/app/context/FileContext/FileContext.js'
 import FolderTreeContext from '../../context/FolderTreeContext.js';
 
 const MainMenu = () => {
@@ -14,6 +15,10 @@ const MainMenu = () => {
         setSearch,
         setOpenFolders,
 
+        selectAllItemsToGroupAction,
+        resetGroupActionSelection,
+        isAllFoldersForGroupActionsSelected,
+
         // with file context usage
         createFile,
         createFolder,
@@ -23,6 +28,8 @@ const MainMenu = () => {
         setOpenFolders([]);
         setSearch(value);
     }
+
+    const allItemsSelected = useMemo(() => isAllFoldersForGroupActionsSelected(), [isAllFoldersForGroupActionsSelected]);
 
     const buttons = [
         {
@@ -40,6 +47,14 @@ const MainMenu = () => {
             title: 'Свернуть все',
             action: () => setOpenFolders([]),
             disabled: !openFolders.length
+        },
+        
+        {
+            text: allItemsSelected ? '◎' : '◉',
+            title: allItemsSelected ? 'Отменить все' : 'Выделить все',
+            action: () => {
+                allItemsSelected ? resetGroupActionSelection() : selectAllItemsToGroupAction();
+            },
         }
     ]
     
@@ -55,6 +70,7 @@ const MainMenu = () => {
                 {
                     buttons.map((button, i) => {
                         return (
+                            button &&
                             <button
                                 onClick={button.action}
                                 disabled={button.disabled}

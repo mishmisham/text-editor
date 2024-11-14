@@ -34,11 +34,12 @@
             position: relative
 
             .input-text input
-                padding: 2.5px 0 2.5px 4px
+                padding: 3px 0 2.5px 4px
                 background: rgba(255,255,255,.05)!important
                 border: 0
                 color: lighten($textColor, 15)
                 text-shadow: 0 0 2px rgba(255,255,255,.2)
+                
         button
             @include flexbox(row, flex-start)
             background: none
@@ -59,17 +60,26 @@
             top: 0px
             left: -32px
             width: 30px
-            opacity: .45
+            opacity: 1
             transition: .15s ease-in-out
 
+            &-item--selected
+                color: #9fcf35 !important
+                &-parent
+                    color: #e7e71c !important
+                &-excluded
+                    color: #7649cb !important
+
             button
+                @include flexbox(row, center, center)
                 width: 14px
                 max-width: 14px
                 margin: 0
-                font-size: 12px
+                padding-top: 4px
+                font-size: 10px
+                transition: .25s ease-in-out
+                color: #6c6b6f
 
-                &:hover
-                    color: lighten($textColor, 40)
 
         &-main
             @include flexbox(row, flex-start, flex-start)
@@ -82,8 +92,9 @@
 
     &_type-icon
         width: 12px
-        margin: auto 2px auto 0
-        font-size: $defaultTextSize
+        margin: auto 2px auto 4px
+        font-size: 10px
+        border-top: 3px solid transparent
 
     &_children
             @include flexbox(column, flex-start, flex-start)
