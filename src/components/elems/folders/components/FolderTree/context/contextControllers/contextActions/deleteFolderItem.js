@@ -1,20 +1,19 @@
 
 
-export const deleteFolderItem = async (item, contextData) => {
+export const deleteFolderItem = async (item, excluded=[], contextData) => {
     const {
         onRemoveChildItemsCallback,
-        fileContext,
-        viewContext,
         confirmModal
     } = contextData;
 
     const {
         removeFileFromAllViews,
-    } = viewContext;
+    } = contextData.viewContext;
 
     const {
+        tree,
         deleteTreeItem
-    } = fileContext;
+    } = contextData.fileContext;
 
     const { userResponse } = await confirmModal?.current?.openModal({
         text: `Удалить ${item.name}?`,
@@ -27,5 +26,5 @@ export const deleteFolderItem = async (item, contextData) => {
     deleteTreeItem(item.id, (child)=>{
         onRemoveChildItemsCallback(child);
         removeFileFromAllViews(child.item.id);
-    });
+    }, tree, false);
 }

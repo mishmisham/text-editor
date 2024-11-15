@@ -13,6 +13,7 @@ const ContextMenu = ({
         startRenameItem,
         setContextMenuItem,
         addCopyOrCutItem,
+        setCutOrCopyItem,
 
         // folder context usage
         createFile,
@@ -56,13 +57,7 @@ const ContextMenu = ({
         },
         mayPasteHere && !isSelectedInGroup && {
             title: 'Paste',
-            action: () => {
-                pasteFolderItem(contextMenuItem);
-
-                if (groupMode) {
-                    resetGroupActionSelection();
-                }
-            }
+            action: () => pasteFolderItem(contextMenuItem),
         },
         !isSelectedInGroup && {
             title: 'Rename',
@@ -79,10 +74,13 @@ const ContextMenu = ({
 
                 if (notInSelection) {
                     resetGroupActionSelection();
-                    deleteFolderItem(contextMenuItem);
-                } else if (inGroupAction) {
-                    // delete all selected items
+                    // deleteFolderItem(contextMenuItem);
                 }
+                // else if (inGroupAction) {
+                //     // delete all selected items
+                // }
+
+                deleteFolderItem(contextMenuItem);
                 
             }
         }

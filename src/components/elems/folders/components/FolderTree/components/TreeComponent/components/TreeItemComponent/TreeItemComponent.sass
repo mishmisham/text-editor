@@ -15,9 +15,13 @@
             button
                 color: lighten($textColor, 15)
 
+    &--context-menu-here
+         >.folder-tree-item_item
+            background: rgba(255,255,255,.035)
+
     &--selected-to-group
          .folder-tree-item_item
-            background: rgba(255,255,255,.045)
+            background: rgba(255,255,255,.035)
 
     &--excluded-from-group
         >.folder-tree-item_item
@@ -27,7 +31,6 @@
         background: rgba(255,255,255,.05)
         outline: 1px dashed rgba(255,255,255,.25)
 
-        
 
     &_item
         @include flexbox(row, flex-start, flex-start)

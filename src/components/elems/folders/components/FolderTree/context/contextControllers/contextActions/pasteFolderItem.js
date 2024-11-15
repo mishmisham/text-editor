@@ -8,6 +8,7 @@ export const pasteFolderItem = async (targetFolder, resetSelectedIfCut=true, con
         resetMouseSelectionsFolderTree,
         openSelectedFolderIfNot,
         setCurrentSelected,
+        resetGroupActionSelection,
     } = contextData;
 
     const {
@@ -22,6 +23,10 @@ export const pasteFolderItem = async (targetFolder, resetSelectedIfCut=true, con
     if (!cutOrCopyItem || !targetFolder || !checkForMayCutOrCopyHere(cutOrCopyItem.item, targetFolder)) {
         return false;
     }
+
+    const {
+        groupMode
+    } = cutOrCopyItem;
 
     return new Promise(async(resolve) =>{
         let result = false;
@@ -78,6 +83,10 @@ export const pasteFolderItem = async (targetFolder, resetSelectedIfCut=true, con
         if (result) {
             resetMouseSelectionsFolderTree();
             setCurrentSelected(result.id);
+        }
+
+        if (groupMode) {
+            resetGroupActionSelection();
         }
 
         resolve(result);

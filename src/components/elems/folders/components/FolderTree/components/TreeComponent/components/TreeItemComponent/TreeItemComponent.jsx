@@ -54,7 +54,7 @@ const TreeItemComponent = ({
     const isOneItemSelectionMode = !selectedToGroupActionsItems.length;
     const itemIsSelectedToGroup = useMemo(()=>itemIsSelectedToGroupActions(item), [item, itemIsSelectedToGroupActions]);
     const itemIsExcludedFromGroup = useMemo(()=>itemIsExcludedFromGroupActions(item), [item, itemIsExcludedFromGroupActions]);
-
+    const contextMenuIsHere = contextMenuItem && contextMenuItem.id === item.id && contextMenuItem.iterationKey === iterationKey;
 
     const onContextMenu = (e) => {
         e.preventDefault();
@@ -79,6 +79,9 @@ const TreeItemComponent = ({
     }
     if (itemIsExcludedFromGroup) {
         itemClassName += ' folder-tree-item--excluded-from-group';
+    }
+    if (contextMenuIsHere) {
+        itemClassName += ' folder-tree-item--context-menu-here';
     }
 
     return (
@@ -117,9 +120,7 @@ const TreeItemComponent = ({
             </DragNDropWrapperComponent>
 
             {
-                contextMenuItem
-                && contextMenuItem.id === item.id
-                && contextMenuItem.iterationKey === iterationKey
+                contextMenuIsHere
                 && <ContextMenu
                     item={item}
                     leftPadding={leftPadding}

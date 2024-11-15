@@ -24,7 +24,8 @@ const TreeComponent = () => {
         setContentRef,
         setConfirmModal,
         refreshMouseAbsolutePosition,
-        pasteFolderItem
+        pasteFolderItem,
+        mouseDownItem
     } = useContext(FolderTreeContext);
 
     const contentRef = useRef(null);
@@ -47,7 +48,7 @@ const TreeComponent = () => {
     const itemList = search ? foundItems : rootItems;
 
     const onDrop = async (e) => {
-        if (e.target.classList.contains('.folder-tree-item') || e.target.closest('.folder-tree-item')) {
+        if (!mouseDownItem || e.target.classList.contains('.folder-tree-item') || e.target.closest('.folder-tree-item')) {
             resetMouseSelectionsFolderTree();
             return;
         }

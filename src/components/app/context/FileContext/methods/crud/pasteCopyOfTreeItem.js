@@ -65,7 +65,8 @@ export const pasteCopyOfTreeItem = (copyTreeItem, copyTo, pasteWithReplace=false
         newTree = res.upgadableTree
     }
 
+
     setTree(newTree);
-            
+
     return newCopy;
 }

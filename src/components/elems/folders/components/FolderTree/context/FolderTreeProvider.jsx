@@ -219,8 +219,8 @@ const FolderTreeProvider = ({ children }) => {
     const pasteFolderItem = async (targetFolder, resetSelectedIfCut=true) => {
         return await contextControllers.pasteFolderItem(targetFolder, resetSelectedIfCut, contextData);
     }
-    const deleteFolderItem = (item) => {
-        contextControllers.deleteFolderItem(item, contextData);
+    const deleteFolderItem = (deleteItems, exclude=[]) => {
+        contextControllers.deleteFolderItem(deleteItems, exclude, contextData);
     }
 
     const contextData = {
