@@ -2,15 +2,26 @@
 
 .folder-tree_content
     @include flexbox(column, flex-start, flex-start)
-    background: rgba(255,255,255,.02)
+    background: rgba(0,0,0,.05)
     overflow: auto
+    box-shadow: 0 0 12px rgba(0,0,0,.5)
+    position: relative
+    border-radius: 16px
 
     &_inner
         @include flexbox(column, flex-start, flex-start)
-        padding: 8px 8px 48px
+        padding: 16px 0 48px
         width: fit-content
         min-width: 100%
         min-height: 240px
+
+    &_aside
+        position: absolute
+        top: 0
+        padding-top: 16px
+        background: rgb(27, 27, 27)
+        box-shadow: 0 0 8px rgba(0,0,0,.25)
+        min-height: 100%
 
     &_drag-n-drop-tooltip
         position: absolute,

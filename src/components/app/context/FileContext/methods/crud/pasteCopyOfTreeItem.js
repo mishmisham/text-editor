@@ -1,6 +1,6 @@
 
-
-export const pasteCopyOfTreeItem = (copyTreeItem, copyTo, pasteWithReplace=false, contextData) => {
+// принимает как отдельные элементы, так и массив элементов
+export const pasteCopyOfTreeItem = (copyTreeItem, copyTo, pasteWithReplace=false, excluded=[], contextData) => {
     const {
         tree,
         setTree,
@@ -11,37 +11,61 @@ export const pasteCopyOfTreeItem = (copyTreeItem, copyTo, pasteWithReplace=false
         renameIfNewNeighboursHasSimilarName,
     } = contextData;
 
-    if (!checkForMayCutOrCopyHere(copyTreeItem, copyTo, true)) {
-        return false;
-    }
-    
+    // if (!checkForMayCutOrCopyHere(copyTreeItem, copyTo, true)) {
+    //     return false;
+    // }
+
     let newTree = [...JSON.parse(JSON.stringify(tree))];
+    let newCopy = Array.isArray(copyTreeItem) ? [] : null;
 
-    const newItem = getCopyOfItem(copyTreeItem, copyTo.id);
+    const upgradeTreeWithOneItem = (item, treeValue) => {
 
-    try {
-        newTree.push(newItem);
+        let upgadableTree = [...treeValue];
 
-        if (copyTreeItem.type === 'folder') {
-            const newItemCopyList = getRecursiveCopyOfAllChildren(copyTreeItem.id, newItem.id, [...newTree]);
-            newTree = [
-                ...newTree,
-                ...newItemCopyList
-            ];
+        const newItem = getCopyOfItem(item, copyTo.id, upgadableTree);
+
+        try {
+            upgadableTree.push(newItem);
+
+            if (item.type === 'folder') {
+                const newItemCopyList = getRecursiveCopyOfAllChildren(item.id, newItem.id, [...upgadableTree], excluded);
+                
+                upgadableTree = [
+                    ...upgadableTree,
+                    ...newItemCopyList
+                ];
+            }
+
+            if (pasteWithReplace) {
+                upgadableTree = removeOldCopyOnPasteReplace(newItem, copyTo.id, upgadableTree);
+            } else {
+                renameIfNewNeighboursHasSimilarName(newItem, copyTo.id, upgadableTree);
+            }
+
+        } catch(err) {
+            console.log('pasteCopyOfTreeItem', upgadableTree)
+            console.log(err)
         }
 
-        if (pasteWithReplace) {
-            newTree = removeOldCopyOnPasteReplace(newItem, copyTo.id, newTree);
-        } else {
-            renameIfNewNeighboursHasSimilarName(newItem, copyTo.id, newTree);
-        }
-
-        setTree(newTree);
-        
-    } catch(err) {
-        console.log('pasteCopyOfTreeItem', newTree)
-        console.log(err)
+        return {
+            newItem,
+            upgadableTree
+        };
     }
-    
-    return newItem;
+
+    if (Array.isArray(copyTreeItem)) {
+        copyTreeItem.forEach(item => {
+            const res = upgradeTreeWithOneItem(item, newTree);
+            newCopy.push(res.newItem);
+            newTree = res.upgadableTree;
+        });
+    } else {
+        const res = upgradeTreeWithOneItem(copyTreeItem, newTree);
+        newCopy = res.newItem
+        newTree = res.upgadableTree
+    }
+
+    setTree(newTree);
+            
+    return newCopy;
 }

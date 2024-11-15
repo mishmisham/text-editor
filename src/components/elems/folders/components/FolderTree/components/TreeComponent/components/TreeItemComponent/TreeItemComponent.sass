@@ -10,19 +10,28 @@
 
     &--current
         >.folder-tree-item_item
-            background: rgba(255,255,255,.05)
-            border-radius: 4px
+            background: rgba(255,255,255,.07)!important
 
             button
                 color: lighten($textColor, 15)
+
+    &--selected-to-group
+         .folder-tree-item_item
+            background: rgba(255,255,255,.045)
+
+    &--excluded-from-group
+        >.folder-tree-item_item
+            background: rgba(255,255,255,.025)
 
     &--drop-target
         background: rgba(255,255,255,.05)
         outline: 1px dashed rgba(255,255,255,.25)
 
+        
+
     &_item
         @include flexbox(row, flex-start, flex-start)
-        padding: 1px 0
+        padding: 4px 120px 4px 0
         position: relative
 
         &:hover
@@ -46,13 +55,13 @@
             cursor: pointer
             color: darken($textColor, 5)
             border: none
-            border-radius: 3px
+            border-radius: 0
             outline: none
             font-size: $defaultTextSize
             padding: 2px 0
 
             &:hover
-                color: lighten($textColor, 20)
+                color: lighten($textColor, 10)
         
         &-actions
             @include flexbox(row, flex-end, flex-start)
@@ -61,24 +70,37 @@
             left: -32px
             width: 30px
             opacity: 1
-            transition: .15s ease-in-out
+            // transition: .05s ease-in-out
 
             &-item--selected
-                color: #9fcf35 !important
+                color: #5a7d96 !important
+                text-shadow: 0 0 1px #1273ba !important
                 &-parent
-                    color: #e7e71c !important
+                    color: #2c485b !important
+                    text-shadow: 0 0 1px #1273ba !important
                 &-excluded
-                    color: #7649cb !important
+                    color: #5a3f36 !important
+                    text-shadow: 0 0 1px #5a3f36 !important
+
+            &-menu--selected
+                color: #aad7f8 !important
+                text-shadow: 0 0 1px #1273ba !important
+
+            &-menu--disabled
+                cursor: not-allowed
+                color: darken($textColor, 25) !important
+                text-shadow: 0 0 1px darken($textColor, 5) !important
 
             button
                 @include flexbox(row, center, center)
-                width: 14px
-                max-width: 14px
+                width: 15px
+                max-width: 15px
                 margin: 0
-                padding-top: 4px
-                font-size: 10px
-                transition: .25s ease-in-out
-                color: #6c6b6f
+                padding-top: 3px
+                font-size: 12px
+                // transition: .15s ease-in-out
+                color: #413f3f
+                height: 18px
 
 
         &-main

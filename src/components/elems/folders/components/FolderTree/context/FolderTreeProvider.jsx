@@ -30,7 +30,7 @@ const FolderTreeProvider = ({ children }) => {
         // modal for confirm delete && replace when paste
         confirmDeleteModal: null,
         // context menu (with iteration key - for exclude search doubles of menu)
-        mouseContextMenuItem: null,
+        contextMenuItem: null,
         // drag n drop
         mouseDownItem: null,
         mouseOverItem: null,
@@ -86,8 +86,6 @@ const FolderTreeProvider = ({ children }) => {
     });
 
     
-    
-
     // mouse
 
     const resetMouseSelectionsFolderTree = () => {
@@ -132,178 +130,75 @@ const FolderTreeProvider = ({ children }) => {
 
     // group actions
 
+    const itemIsSelectedToGroupActions = (item, deepCheck=false) => {
+        return contextControllers.itemIsSelectedToGroupActions(item, deepCheck, contextData);
+    }
+
+    const itemIsExcludedFromGroupActions = (item, deepCheck=false) => {
+        return contextControllers.itemIsExcludedFromGroupActions(item, deepCheck, contextData);
+    }
+
     const resetGroupActionSelection = () => {
-        setSelectedToGroupActionsItems([]);
-        setExcludedFromGroupActionsItems([]);
+        contextControllers.resetGroupActionSelection(contextData);
     }
 
     const addToGroupActionsItemSelection = (item) => {
-        const { selectedToGroupActionsItems } = state;
-       
-        // remove children from selected when parent is selected
-        const removeFromGroupList = getChildrenListForRemoveFromGroupActionsSelection(item);
-
-        setSelectedToGroupActionsItems([
-            item,
-            ...selectedToGroupActionsItems
-                    .filter(elem=> -1 === removeFromGroupList
-                            .findIndex(child=>elem.id === child.id)),
-        ]);
+        contextControllers.addToGroupActionsItemSelection(item, contextData);
     }
 
     const getExcludedFromGroupActionsChildren = (item) => {
-        const {
-            excludedFromGroupActionsItems
-        } = state;
-        const {
-            getAllFolderChildren,
-            tree,
-        } = contextData.fileContext;
-        
-        const itemChildren = item.type === 'folder' ? getAllFolderChildren(item.id, tree).map(child=>child.item) : [];
-        const excludedChildren = itemChildren.filter(child => excludedFromGroupActionsItems.find(elem=>elem.id === child.id));
-       
-        return excludedChildren;
+        return contextControllers.getExcludedFromGroupActionsChildren(item, contextData);
     }
 
     const removeFromGroupActionsItemSelection = (item) => {
-        const { selectedToGroupActionsItems } = state;
-        const excludedChildren = getExcludedFromGroupActionsChildren(item);
-
-        removeFromExcludedActionSelection(excludedChildren);
-
-        setSelectedToGroupActionsItems([
-            ...selectedToGroupActionsItems
-                    .filter(elem=>elem.id !== item.id),
-        ]);
+        contextControllers.removeFromGroupActionsItemSelection(item, contextData);
     }
 
     const toggleToGroupActionsItemSelection = (item) => {
-        const issetInGroup = itemIsSelectedToGroupActions(item);
-        if (issetInGroup) {
-            removeFromGroupActionsItemSelection(item);
-        } else {
-            addToGroupActionsItemSelection(item);
-        }
-    }
-
-    const itemIsSelectedToGroupActions = (item) => {
-        const { selectedToGroupActionsItems } = state;
-        return selectedToGroupActionsItems.find(elem=>elem.id === item.id);
-    }
-
-    const itemIsExcludedFromGroupActions = (item) => {
-        const { excludedFromGroupActionsItems } = state;
-        return excludedFromGroupActionsItems.find(elem=>elem.id === item.id);
+        contextControllers.toggleToGroupActionsItemSelection(item, contextData);
     }
 
     const getChildrenListForRemoveFromGroupActionsSelection = (item) => {
-        if (item.type !== 'folder') {
-            return [];
-        }
-        
-        const {
-            getAllFolderChildren,
-            tree,
-        } = contextData.fileContext;
-
-        const itemChildren = getAllFolderChildren(item.id, tree).map(child=>child.item);
-        const removeFromGroupList = itemChildren.filter(child=>itemIsSelectedToGroupActions(child));
-        return removeFromGroupList;
+        return contextControllers.getChildrenListForRemoveFromGroupActionsSelection(item, contextData);
     }
 
     const removeChildrenFromGroupActionsSelection = (item) => {
-        const { selectedToGroupActionsItems } = state;
-        const removeFromGroupList = getChildrenListForRemoveFromGroupActionsSelection(item);
-
-        if (!removeFromGroupList) {
-            return;
-        }
-
-        setSelectedToGroupActionsItems([
-            ...selectedToGroupActionsItems
-                .filter(elem=> -1 === removeFromGroupList
-                    .findIndex(child=>elem.id === child.id)),
-        ]);
-
+        contextControllers.removeChildrenFromGroupActionsSelection(item, contextData);
     }
 
     const excludeFromGroupActionSelection = (item) => {
-        const { excludedFromGroupActionsItems } = state;
-        
-        if (itemIsSelectedToGroupActions(item)) {
-            removeFromGroupActionsItemSelection(item);
-        }
-
-        removeChildrenFromGroupActionsSelection(item);
-
-        setExcludedFromGroupActionsItems([
-            ...excludedFromGroupActionsItems,
-            item
-        ]);
+        contextControllers.excludeFromGroupActionSelection(item, contextData);
     }
 
     const removeFromExcludedActionSelection = (itemList) =>{
-        const { excludedFromGroupActionsItems } = state;
-        const filtered = [...excludedFromGroupActionsItems].filter(elem=> !itemList.find(item => elem.id === item.id));
-        setExcludedFromGroupActionsItems([
-            ...filtered
-        ]);
+        contextControllers.removeFromExcludedActionSelection(itemList, contextData);
     }
 
     const toggleExcludeFromGroupActions = (item) => {
-        if (!itemIsExcludedFromGroupActions(item)) {
-            excludeFromGroupActionSelection(item);
-        } else {
-            removeFromExcludedActionSelection([item]);
-        }
+        contextControllers.toggleExcludeFromGroupActions(item, contextData);
     }
 
     const isAllFoldersForGroupActionsSelected = () => {
-        const {
-            getAllRootTreeItems
-        } = contextData.fileContext;
-
-        const allRoots = getAllRootTreeItems();
-        let allSelected = true;
-        allRoots.forEach(item => {
-            if (!itemIsSelectedToGroupActions(item)) {
-                allSelected = false;
-            }
-        })
-        return allSelected;
+        return contextControllers.isAllFoldersForGroupActionsSelected(contextData);
     }
 
     const selectAllItemsToGroupAction = () => {
-        const {
-            selectedToGroupActionsItems
-        } = state;
-
-        const {
-            getAllRootTreeItems
-        } = contextData.fileContext;
-
-        const allRoots = getAllRootTreeItems();
-        const newToSelect = allRoots.filter(rootItem => !itemIsSelectedToGroupActions(rootItem));
-        
-        setSelectedToGroupActionsItems([
-            ...selectedToGroupActionsItems,
-            ...newToSelect
-        ]);
+        contextControllers.selectAllItemsToGroupAction(contextData);
     }
+
 
     // context menu
 
-    const openContextMenu = (item) => {
-        const {
-            selectedToGroupActionsItems
-        } = state;
- 
-        if (!selectedToGroupActionsItems.length) {
-            setCurrentSelected(item.id);
-        }
+    const setupItemForActions = (item) => {
+        return contextControllers.setupItemForActions(item, contextData);
+    }
 
-        setContextMenuItem(item);
+    const openContextMenu = (item) => {
+        contextControllers.openContextMenu(item, contextData);
+    }
+
+    const addCopyOrCutItem = (item, mode) => {
+        contextControllers.addCopyOrCutItem(item, mode, contextData);
     }
 
 
@@ -321,24 +216,15 @@ const FolderTreeProvider = ({ children }) => {
     const createFolder = (parentFolderID=null) => {
         return contextControllers.createFolder(parentFolderID, contextData);
     }
-    const pasteFolderItem = async (addItem, targetFolder, resetSelectedIfCut=true) => {
-        return await contextControllers.pasteFolderItem(addItem, targetFolder, resetSelectedIfCut, contextData);
+    const pasteFolderItem = async (targetFolder, resetSelectedIfCut=true) => {
+        return await contextControllers.pasteFolderItem(targetFolder, resetSelectedIfCut, contextData);
     }
     const deleteFolderItem = (item) => {
         contextControllers.deleteFolderItem(item, contextData);
     }
 
     const contextData = {
-        // search,
-        // renameID,
-        // currentSelected,
-        // openFolders,
-        // cutOrCopyItem,
-
-        // mouseDownItem,
-        // mouseOverItem,
-        // mouseContextMenuItem,
-        // mouseMoveAbsoluteCoordinates,
+       
         ...state,
 
         contentRef, setContentRef,
@@ -358,6 +244,7 @@ const FolderTreeProvider = ({ children }) => {
         setMouseOverItem,
         setMouseMoveAbsoluteCoordinates,
         setSelectedToGroupActionsItems,
+        setExcludedFromGroupActionsItems,
         refreshMouseAbsolutePosition,
         isDropFileTarget,
         resetMouseSelectionsFolderTree,
@@ -369,6 +256,8 @@ const FolderTreeProvider = ({ children }) => {
         cancelRename,
         onRemoveChildItemsCallback,
         
+        setupItemForActions,
+        addCopyOrCutItem,
         openContextMenu,
 
         resetGroupActionSelection,
@@ -384,6 +273,7 @@ const FolderTreeProvider = ({ children }) => {
         removeChildrenFromGroupActionsSelection,
         isAllFoldersForGroupActionsSelected,
         selectAllItemsToGroupAction,
+        getChildrenListForRemoveFromGroupActionsSelection,
 
         // functions, that use file context
         getCurrentSelectedFolder,

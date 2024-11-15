@@ -10,4 +10,3 @@ export { startRenameItem } from './rename/startRenameItem.js';
 export { cancelRename } from './rename/cancelRename.js';
 export { refreshMouseAbsolutePosition } from './mouse/refreshMouseAbsolutePosition.js';
 
-

@@ -1,5 +1,5 @@
 
-export const deleteTreeItem = (itemID, eachChildItemCallback = null, sourceArray, onlyUpgradeArray=false, contextData) => {
+export const deleteTreeItem = (itemID, eachChildItemCallback = null, sourceArray, onlyUpgradeArray=false, excluded=[], contextData) => {
     
     const {
         setTree,

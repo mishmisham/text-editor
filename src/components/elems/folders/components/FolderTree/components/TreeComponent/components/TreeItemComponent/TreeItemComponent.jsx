@@ -34,7 +34,7 @@ const TreeItemComponent = ({
         currentSelected,
         setCurrentSelected,
         
-        mouseContextMenuItem,
+        contextMenuItem,
 
         isOpenFolder,
        
@@ -74,6 +74,12 @@ const TreeItemComponent = ({
     if (isDropFileTarget(item.id)) {
         itemClassName += ' folder-tree-item--drop-target';
     }
+    if (itemIsSelectedToGroup) {
+        itemClassName += ' folder-tree-item--selected-to-group';
+    }
+    if (itemIsExcludedFromGroup) {
+        itemClassName += ' folder-tree-item--excluded-from-group';
+    }
 
     return (
         <div className={itemClassName}>
@@ -111,9 +117,9 @@ const TreeItemComponent = ({
             </DragNDropWrapperComponent>
 
             {
-                mouseContextMenuItem
-                && mouseContextMenuItem.id === item.id
-                && mouseContextMenuItem.iterationKey === iterationKey
+                contextMenuItem
+                && contextMenuItem.id === item.id
+                && contextMenuItem.iterationKey === iterationKey
                 && <ContextMenu
                     item={item}
                     leftPadding={leftPadding}

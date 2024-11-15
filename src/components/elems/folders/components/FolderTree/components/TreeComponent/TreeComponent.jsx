@@ -1,6 +1,8 @@
 import React, { useMemo, useRef, useContext, useEffect } from "react";
 import './TreeComponent.sass';
 import TreeItemComponent from './components/TreeItemComponent/TreeItemComponent';
+import TreeItemAsideInfoListItem from './components/TreeItemAsideInfoListItem/TreeItemAsideInfoListItem';
+
 import ConfirmModal from './components/ConfirmModal/ConfirmModal.jsx';
 import DraggingTreeItemMouseGhost from './components/DraggingTreeItemMouseGhost/DraggingTreeItemMouseGhost.jsx';
 
@@ -18,7 +20,6 @@ const TreeComponent = () => {
 
     const {
         search,
-        mouseDownItem,
         resetMouseSelectionsFolderTree,
         setContentRef,
         setConfirmModal,
@@ -28,6 +29,7 @@ const TreeComponent = () => {
 
     const contentRef = useRef(null);
     const confirmModal = useRef(null);
+    const asideRef = useRef(null);
    
     useEffect(() => {
         setContentRef(contentRef)
@@ -50,7 +52,7 @@ const TreeComponent = () => {
             return;
         }
 
-        pasteFolderItem(mouseDownItem, {type:'root'});
+        pasteFolderItem({type:'root'});
     }
 
     const onMouseMove = (e) => {
@@ -59,31 +61,70 @@ const TreeComponent = () => {
     
     useMouseOverFolderOpen();
 
+    const setAsideLeftMarginOnScroll = () => {
+        if (contentRef?.current && asideRef?.current){
+            const {
+                clientWidth,
+                scrollLeft
+            } = contentRef.current;
+            asideRef.current.style.left = (clientWidth + scrollLeft - asideRef?.current.clientWidth  + 1) + 'px';
+        }
+    }
+
+    const onScroll = (e) => {
+        setAsideLeftMarginOnScroll();
+    }
+
+    useEffect(() => {
+        setAsideLeftMarginOnScroll();
+    }, [contentRef, asideRef]);
+
+
     return (
         <div
             onMouseMove={onMouseMove}
             onMouseUp={onDrop}
+            onScroll={onScroll}
             onMouseLeave={resetMouseSelectionsFolderTree}
             className="folder-tree_content"
             ref={contentRef}
         >
+
             <div className="folder-tree_content_inner">
-            {
-                itemList.map((item, i) => {
-                    return (
-                        <TreeItemComponent
-                            leftPadding={0}
-                            level={0}
-                            item={item}
-                            key={item.id}
-                            // for one context menu when search similar open paths
-                            iterationKey={i}
-                        />
-                    )
-                })
-            }
+                {
+                    itemList.map((item, i) => {
+                        return (
+                            <TreeItemComponent
+                                leftPadding={0}
+                                level={0}
+                                item={item}
+                                key={item.id}
+                                // for one context menu when search similar open paths
+                                iterationKey={i}
+                            />
+                        )
+                    })
+                }
+                <div
+                    className="folder-tree_content_aside"
+                    ref={asideRef}
+                >
+                {
+                    itemList.map((item, i) => {
+                        return (
+                            <TreeItemAsideInfoListItem
+                                item={item}
+                                key={item.id}
+                            />
+                        )
+                    })
+                }
+                </div>
             </div>
+            
+            
             <DraggingTreeItemMouseGhost />
+
             <ConfirmModal
                 ref={confirmModal}
             />

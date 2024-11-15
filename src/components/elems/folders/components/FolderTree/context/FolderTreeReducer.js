@@ -31,7 +31,7 @@ export default function FolderTreeReducer(state, action) {
         case 'setContextMenuItem':
             return {
                 ...state,
-                mouseContextMenuItem: action.payload
+                contextMenuItem: action.payload
             };
         case 'setMouseDownItem':
             return {

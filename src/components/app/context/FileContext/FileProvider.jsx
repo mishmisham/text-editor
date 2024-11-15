@@ -53,8 +53,8 @@ const FileProvider = ({ children }) => {
          return FileProviderMethods.getClosestTreeItemFolder(item)
      }
 
-     const getRecursiveCopyOfAllChildren = (oldParentID, newParentID, idCompareArray=[], list=[]) => {
-         return FileProviderMethods.getRecursiveCopyOfAllChildren(oldParentID, newParentID, idCompareArray, list, contextData);
+     const getRecursiveCopyOfAllChildren = (oldParentID, newParentID, idCompareArray=[], excluded=[], list=[]) => {
+         return FileProviderMethods.getRecursiveCopyOfAllChildren(oldParentID, newParentID, idCompareArray, excluded, list, contextData);
      }
 
      const getCopyOfItem = (item, parentID, idCompareArray=[]) => {
@@ -110,16 +110,16 @@ const FileProvider = ({ children }) => {
         return FileProviderMethods.removeOldCopyOnPasteReplace(file, parentID, sourceArray, contextData);
     }
 
-    const moveTreeItemToFolder = (moveTreeItem, moveTo, pasteWithReplace=false) => {
-        return FileProviderMethods.moveTreeItemToFolder(moveTreeItem, moveTo, pasteWithReplace, contextData);
+    const moveTreeItemToFolder = (moveTreeItem, moveTo, pasteWithReplace=false, excluded=[]) => {
+        return FileProviderMethods.moveTreeItemToFolder(moveTreeItem, moveTo, pasteWithReplace, excluded, contextData);
     }
 
-    const pasteCopyOfTreeItem = (copyTreeItem, copyTo, pasteWithReplace=false) => {
-        return FileProviderMethods.pasteCopyOfTreeItem(copyTreeItem, copyTo, pasteWithReplace, contextData);
+    const pasteCopyOfTreeItem = (copyTreeItem, copyTo, pasteWithReplace=false, excluded=[]) => {
+        return FileProviderMethods.pasteCopyOfTreeItem(copyTreeItem, copyTo, pasteWithReplace, excluded, contextData);
     }
 
-    const deleteTreeItem = (itemID, eachChildItemCallback = null, sourceArray=state.tree, onlyUpgradeArray=false) => {
-        return FileProviderMethods.deleteTreeItem(itemID, eachChildItemCallback, sourceArray, onlyUpgradeArray, contextData);
+    const deleteTreeItem = (itemID, eachChildItemCallback = null, sourceArray=state.tree, onlyUpgradeArray=false, excluded=[]) => {
+        return FileProviderMethods.deleteTreeItem(itemID, eachChildItemCallback, sourceArray, onlyUpgradeArray, excluded, contextData);
     }
 
     const contextData = {

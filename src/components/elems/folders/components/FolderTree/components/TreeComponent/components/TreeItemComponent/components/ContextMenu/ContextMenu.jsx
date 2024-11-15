@@ -1,72 +1,90 @@
-import React, { useContext, useMemo } from "react";
+import React, { useContext } from "react";
 import './ContextMenu.sass';
 import useAddEventListener from '@/hooks/useAddEventListener';
 
-import FileContext from '@/components/app/context/FileContext/FileContext.js'
 import FolderTreeContext from '../../../../../../context/FolderTreeContext.js';
 
 const ContextMenu = ({
-    item,
     leftPadding,
 }) => {
 
     const {
-        checkForMayCutOrCopyHere
-    } = useContext(FileContext);
-
-    const {
-        cutOrCopyItem,
-        mouseDownItem,
-        mouseOverItem,
+        contextMenuItem,
         startRenameItem,
-        setCutOrCopyItem,
         setContextMenuItem,
-        selectedToGroupActionsItems,
+        addCopyOrCutItem,
 
         // folder context usage
         createFile,
         createFolder,
         pasteFolderItem,
         deleteFolderItem,
+        resetGroupActionSelection,
     } = useContext(FolderTreeContext);
 
-    const isFolder = item.type === 'folder';
-    const oneSelectedMode = !selectedToGroupActionsItems.length;
-
-    const mayPaste = useMemo(() => {
-        return isFolder && !mouseOverItem && cutOrCopyItem && checkForMayCutOrCopyHere(cutOrCopyItem, item);
-    }, [isFolder, mouseDownItem, mouseOverItem, cutOrCopyItem]);
-   
+    const {
+        isFolder,
+        mayPasteHere,
+        groupMode,
+        isSelectedInGroup,
+        notInSelection,
+        inGroupAction
+    } = contextMenuItem;
 
     const actions = [
-
-        isFolder && oneSelectedMode && {
+        isFolder && !isSelectedInGroup && {
             title: '+ File',
-            action: () => createFile(item.id)
+            action: () => {
+                resetGroupActionSelection();
+                createFile(contextMenuItem.id);
+            }
         },
-        isFolder && oneSelectedMode && {
+        isFolder && !isSelectedInGroup && {
             title: '+ Folder',
-            action: () => createFolder(item.id)
+            action: () => {
+                resetGroupActionSelection();
+                createFolder(contextMenuItem.id);
+            }
         },
         {
             title: 'Copy',
-            action: () => setCutOrCopyItem({ mode: 'copy', item })
+            action: () => addCopyOrCutItem(contextMenuItem, 'copy')
         },
         {
             title: 'Cut',
-            action: () => setCutOrCopyItem({ mode: 'cut', item })
+            action: () => addCopyOrCutItem(contextMenuItem, 'cut')
         },
-        mayPaste && oneSelectedMode && {
+        mayPasteHere && !isSelectedInGroup && {
             title: 'Paste',
-            action: () => pasteFolderItem(cutOrCopyItem.item, item)
+            action: () => {
+                pasteFolderItem(contextMenuItem);
+
+                if (groupMode) {
+                    resetGroupActionSelection();
+                }
+            }
         },
-        oneSelectedMode && {
+        !isSelectedInGroup && {
             title: 'Rename',
-            action: () => startRenameItem(item.id)
+            action: () => {
+                if (groupMode) {
+                    resetGroupActionSelection();
+                }
+                startRenameItem(contextMenuItem.id)
+            }
         },
         {
             title: 'Delete',
-            action: () => deleteFolderItem(item)
+            action: () => {
+
+                if (notInSelection) {
+                    resetGroupActionSelection();
+                    deleteFolderItem(contextMenuItem);
+                } else if (inGroupAction) {
+                    // delete all selected items
+                }
+                
+            }
         }
     ];
 

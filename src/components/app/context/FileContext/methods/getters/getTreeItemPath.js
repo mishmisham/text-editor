@@ -1,21 +1,30 @@
 import { getTreeItemByID } from './getTreeItemByID';
 
-export const getTreeItemPath = (item, tree) => {
-    const breadCrumbs = [];
+export const getTreeItemPath = (item, sourceArray) => {
 
-    const finder = (elem) => {
-        if (!elem) {
+    if (!item.parent) {
+        return [];
+    }
+
+    const finder = (elem, list=[]) => {
+        if (!elem.parent) {
             return;
         }
-        const parent = getTreeItemByID(elem.parent, tree);
-        breadCrumbs.push(parent.item);
 
-        if (parent.parent) { 
-            finder(parent);
+        const parent = getTreeItemByID(elem.parent, sourceArray);
+        
+        if (!parent.item) {
+            return;
+        }
+        
+        list.push(parent.item);
+        if (parent.item.parent) { 
+            finder(parent.item, list);
         }
     }
 
-    finder(item);
+    const breadcrumbs = [];
+    finder(item, breadcrumbs);
 
-    return breadCrumbs.reverse();
+    return breadcrumbs.reverse();
 }

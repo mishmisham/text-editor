@@ -8,7 +8,7 @@ export default createContext({
     cutOrCopyItem: null,
     contentRef: null,
     confirmDeleteModal: null,
-    mouseContextMenuItem: null,
+    contextMenuItem: null,
     mouseDownItem: null,
     mouseOverItem: null,
     mouseMoveAbsoluteCoordinates: null,

@@ -24,6 +24,7 @@ const ItemDefaultMainContent = ({
         closeFolder,
         setCurrentSelected,
 
+        contextMenuItem,
         openContextMenu,
         toggleToGroupActionsItemSelection,
         toggleExcludeFromGroupActions,
@@ -53,11 +54,9 @@ const ItemDefaultMainContent = ({
     if (itemIsSelectedToGroup) {
         selectionButtonClassName = 'folder-tree-item_item-actions-item--selected';
     }
-
     if (parentIsSelectedToGroup) {
         selectionButtonClassName = 'folder-tree-item_item-actions-item--selected-parent';
-    } 
-    
+    }
     if (itemIsExcludedFromGroup || parentIsExcludedFromGroup) {
         selectionButtonClassName = 'folder-tree-item_item-actions-item--selected-excluded';
     } 
@@ -66,20 +65,33 @@ const ItemDefaultMainContent = ({
         if (parentIsExcludedFromGroup) {
             return;
         }
-        
+
         if (parentIsSelectedToGroup) {
             toggleExcludeFromGroupActions(item);
         } else {
             toggleToGroupActionsItemSelection(item);
         }
     }
+
+    let selectItemButtonTitle = 'Выбрать';
+    const isIncluded = itemIsSelectedToGroup || parentIsSelectedToGroup;
+    const isExcluded = itemIsExcludedFromGroup || parentIsExcludedFromGroup;
+    if (isIncluded && !isExcluded) {
+        selectItemButtonTitle = 'Исключить';
+    } else if (isExcluded)  {
+        selectItemButtonTitle = 'Включить';
+    } 
+
+    const mainMenuButtonClass = contextMenuItem?.id === item.id ? 'folder-tree-item_item-actions-menu--selected' : (isExcluded ? 'folder-tree-item_item-actions-menu--disabled' : '');
+
+
     return (
         ( <>
             <div className="folder-tree-item_item-actions">
                 <button
                     onClick={toggleToSelection}
-                    title="Выбрать"
-                    style={{fontSize: '4.5px', marginTop:'3.5px', paddingLeft: '2px'}}
+                    title={selectItemButtonTitle}
+                    style={{fontSize: '4px', marginTop:'2px', paddingLeft: '3px'}}
                     className={selectionButtonClassName}
                 >
                     ●
@@ -87,8 +99,9 @@ const ItemDefaultMainContent = ({
                 <button
                     onClick={toggleContextMenu}
                     title="Меню"
+                    className={mainMenuButtonClass}
                 >
-                   ⌘
+                   ☰
                 </button>
             </div>
 

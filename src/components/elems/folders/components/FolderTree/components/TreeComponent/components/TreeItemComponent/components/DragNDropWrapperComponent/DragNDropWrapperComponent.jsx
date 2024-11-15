@@ -19,7 +19,9 @@ const DragNDropWrapperComponent = ({
         openFolder,
         cutOrCopyItem,
         setCutOrCopyItem,
-        pasteFolderItem
+        pasteFolderItem,
+        addCopyOrCutItem,
+        setupItemForActions
     } = useContext(FolderTreeContext);
     
     const refreshMouseOver = useDebounced(() => {
@@ -31,10 +33,7 @@ const DragNDropWrapperComponent = ({
         const currentHoverIsNotDraggingNow = mouseDownItem && mouseDownItem?.id !== item.id;
         const draggingItemIsNotAlreadyRegistered = (!cutOrCopyItem || cutOrCopyItem?.id !== mouseDownItem?.id);
         if (currentHoverIsNotDraggingNow && draggingItemIsNotAlreadyRegistered) {
-            setCutOrCopyItem({
-                mode: 'cut',
-                item: mouseDownItem
-            });
+            addCopyOrCutItem(mouseDownItem, 'cut');
         }
 
         setMouseOverItem({
@@ -47,7 +46,8 @@ const DragNDropWrapperComponent = ({
         if (currentSelected !== item.id) {
             return;
         }
-        setMouseDownItem(item);
+        const actionItem = setupItemForActions(item);
+        setMouseDownItem(actionItem);
     }
 
     const onMouseOver = (e) => {
@@ -59,13 +59,17 @@ const DragNDropWrapperComponent = ({
         if (itWasJustClick) {
             setMouseDownItem(null);
         }
-        
+
         const draggableWasRegisteredButItWasClick = cutOrCopyItem && cutOrCopyItem?.id === item.id;
         if (draggableWasRegisteredButItWasClick) {
             setCutOrCopyItem(null);
         }
 
-        pasteFolderItem(mouseDownItem, item);
+        if (!mouseDownItem || itWasJustClick || draggableWasRegisteredButItWasClick) {
+            return;
+        }
+
+        pasteFolderItem(item);
     }
 
     const onMouseLeave = () => {
